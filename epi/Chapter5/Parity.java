@@ -1,7 +1,7 @@
 package epi.Chapter5;
 
+import epi.TestRunner;
 import epi.test_framework.EpiTest;
-import epi.test_framework.GenericTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,11 +55,6 @@ public final class Parity {
     }
 
     public static void main(String[] args) {
-        System.exit(
-                GenericTest
-                        .runFromAnnotations(args, "Parity.java",
-                                new Object() {
-                                }.getClass().getEnclosingClass())
-                        .ordinal());
+        TestRunner.run(args, "epi.Chapter5.Parity");
     }
 }

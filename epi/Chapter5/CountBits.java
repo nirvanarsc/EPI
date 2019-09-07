@@ -1,7 +1,7 @@
 package epi.Chapter5;
 
+import epi.TestRunner;
 import epi.test_framework.EpiTest;
-import epi.test_framework.GenericTest;
 
 public final class CountBits {
     private CountBits() {
@@ -18,9 +18,6 @@ public final class CountBits {
     }
 
     public static void main(String[] args) {
-        System.exit(GenericTest
-                .runFromAnnotations(args, "CountBits.java", new Object() {
-                }.getClass().getEnclosingClass())
-                .ordinal());
+        TestRunner.run(args, "epi.Chapter5.CountBits");
     }
 }
