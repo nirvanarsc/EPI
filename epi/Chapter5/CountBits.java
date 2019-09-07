@@ -1,4 +1,4 @@
-package epi;
+package epi.Chapter5;
 
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
