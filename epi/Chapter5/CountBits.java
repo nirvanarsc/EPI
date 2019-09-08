@@ -4,8 +4,6 @@ import epi.TestRunner;
 import epi.test_framework.EpiTest;
 
 public final class CountBits {
-    private CountBits() {
-    }
 
     @EpiTest(testDataFile = "count_bits.tsv")
     public static short countBits(int x) {
@@ -19,5 +17,8 @@ public final class CountBits {
 
     public static void main(String[] args) {
         TestRunner.run(args, "epi.Chapter5.CountBits");
+    }
+
+    private CountBits() {
     }
 }
