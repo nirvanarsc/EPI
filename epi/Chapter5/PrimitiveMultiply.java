@@ -7,7 +7,32 @@ public final class PrimitiveMultiply {
 
     @EpiTest(testDataFile = "primitive_multiply.tsv")
     public static long multiply(long x, long y) {
-        return x * y;
+        long res = 0;
+        short idx = 0;
+        while (idx++ < Long.SIZE) {
+            if (((x >> idx) & 1) == 1) {
+                res = add(res, y << idx);
+            }
+        }
+
+        return res;
+    }
+
+    private static long add(long x, long y) {
+        long flag, prevFlag = 0, res = 0;
+        short idx = 0;
+
+        while (idx++ < Long.SIZE) {
+            final long left = (x >> idx) & 1;
+            final long right = (y >> idx) & 1;
+            flag = (left == 1 && right == 1) || ((left != right) && prevFlag == 1) ? 1 : 0;
+            if ((left ^ right ^ prevFlag) == 1) {
+                res |= 1L << idx;
+            }
+            prevFlag = flag;
+        }
+
+        return res;
     }
 
     public static void main(String[] args) {
