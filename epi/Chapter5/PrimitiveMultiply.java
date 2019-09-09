@@ -23,8 +23,8 @@ public final class PrimitiveMultiply {
         short idx = 0;
 
         while (idx++ < Long.SIZE) {
-            final long left = (x >> idx) & 1;
-            final long right = (y >> idx) & 1;
+            final short left = (short) ((x >> idx) & 1);
+            final short right = (short) ((y >> idx) & 1);
             flag = (left == 1 && right == 1) || ((left != right) && prevFlag == 1) ? 1 : 0;
             if ((left ^ right ^ prevFlag) == 1) {
                 res |= 1L << idx;
