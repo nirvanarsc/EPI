@@ -11,7 +11,7 @@ import java.util.Random;
 import static epi.test_framework.RandomSequenceChecker.checkSequenceIsUniformlyRandom;
 import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
 
-public class UniformRandomNumber {
+public final class UniformRandomNumber {
 
     private static int zeroOneRandom() {
         final Random gen = new Random();
@@ -19,8 +19,23 @@ public class UniformRandomNumber {
     }
 
     public static int uniformRandom(int lowerBound, int upperBound) {
-        // TODO - you fill in here.
-        return 0;
+        final int limit = upperBound - lowerBound;
+        int idx = Integer.SIZE - 1;
+
+        while ((limit & (1 << --idx)) == 0) {
+        }
+
+        while (true) {
+            int res = 0;
+            for (int i = 0; i <= idx; i++) {
+                if (zeroOneRandom() == 1) {
+                    res |= 1 << i;
+                }
+            }
+            if (res <= limit) {
+                return lowerBound + res;
+            }
+        }
     }
 
     private static boolean uniformRandomRunner(TimedExecutor executor, int lowerBound, int upperBound) throws Exception {
@@ -47,5 +62,8 @@ public class UniformRandomNumber {
 
     public static void main(String[] args) {
         TestRunner.run(args, "epi.Chapter5.UniformRandomNumber");
+    }
+
+    private UniformRandomNumber() {
     }
 }
