@@ -8,7 +8,6 @@ import java.util.List;
 
 public final class SortedArrayRemoveDups {
 
-    // Returns the number of valid entries after deletion.
 //    public static int deleteDuplicates(List<Integer> a) {
 //        if (a.isEmpty()) {
 //            return 0;
@@ -31,6 +30,7 @@ public final class SortedArrayRemoveDups {
 //        return idx;
 //    }
 
+    // Returns the number of valid entries after deletion.
     public static int deleteDuplicates(List<Integer> a) {
         if (a.isEmpty()) {
             return 0;
