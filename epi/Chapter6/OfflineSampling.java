@@ -5,6 +5,7 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.TimedExecutor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -15,18 +16,18 @@ public final class OfflineSampling {
 
     public static void randomSampling(int k, List<Integer> a) {
         final Random r = new Random();
+        for (int i = 0; i < k; i++) {
+            Collections.swap(a, i, i + r.nextInt(a.size() - i));
+        }
+    }
+
+    public static void randomSampling2(int k, List<Integer> a) {
+        final Random r = new Random();
         int l = a.size() - k;
         while (l-- > 0) {
             a.remove(r.nextInt(a.size()));
         }
     }
-
-//    public static void randomSampling(int k, List<Integer> a) {
-//        final Random r = new Random();
-//        for (int i = 0; i < k; i++) {
-//            Collections.swap(a, i, i + r.nextInt(a.size() - i));
-//        }
-//    }
 
     private static boolean randomSamplingRunner(TimedExecutor executor, int k, List<Integer> a) throws Exception {
         final List<List<Integer>> results = new ArrayList<>();
