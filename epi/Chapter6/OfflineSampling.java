@@ -5,14 +5,11 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.TimedExecutor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static epi.test_framework.RandomSequenceChecker.binomialCoefficient;
-import static epi.test_framework.RandomSequenceChecker.checkSequenceIsUniformlyRandom;
-import static epi.test_framework.RandomSequenceChecker.computeCombinationIdx;
 import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
+import static epi.utils.RandomSampleUtils.computeRandomSamples;
 
 public final class OfflineSampling {
 
@@ -41,18 +38,7 @@ public final class OfflineSampling {
             }
         });
 
-        final int totalPossibleOutcomes = binomialCoefficient(a.size(), k);
-        Collections.sort(a);
-        final List<List<Integer>> combinations = new ArrayList<>();
-        for (int i = 0; i < binomialCoefficient(a.size(), k); ++i) {
-            combinations.add(computeCombinationIdx(a, a.size(), k, i));
-        }
-        final List<Integer> sequence = new ArrayList<>();
-        for (List<Integer> result : results) {
-            Collections.sort(result);
-            sequence.add(combinations.indexOf(result));
-        }
-        return checkSequenceIsUniformlyRandom(sequence, totalPossibleOutcomes, 0.01);
+        return computeRandomSamples(a, k, results);
     }
 
     @EpiTest(testDataFile = "offline_sampling.tsv")
