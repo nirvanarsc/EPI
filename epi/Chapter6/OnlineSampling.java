@@ -43,7 +43,7 @@ public final class OnlineSampling {
             }
         });
 
-        return computeRandomSamples(a, k, results);
+        return computeRandomSamples(a, a.size(), k, results);
     }
 
     @EpiTest(testDataFile = "online_sampling.tsv")

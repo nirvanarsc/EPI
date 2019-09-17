@@ -39,7 +39,7 @@ public final class OfflineSampling {
             }
         });
 
-        return computeRandomSamples(a, k, results);
+        return computeRandomSamples(a, a.size(), k, results);
     }
 
     @EpiTest(testDataFile = "offline_sampling.tsv")

@@ -10,12 +10,16 @@ import static epi.test_framework.RandomSequenceChecker.computeCombinationIdx;
 
 public final class RandomSampleUtils {
 
-    public static boolean computeRandomSamples(List<Integer> a, int k, List<List<Integer>> results) {
-        final int totalPossibleOutcomes = binomialCoefficient(a.size(), k);
+    public static boolean computeRandomSamples(List<Integer> a, int n, int k, List<List<Integer>> results) {
+        final int totalPossibleOutcomes = binomialCoefficient(n, k);
         Collections.sort(a);
+        return computeHelper(n, k, results, totalPossibleOutcomes, a);
+    }
+
+    public static boolean computeHelper(int n, int k, List<List<Integer>> results, int totalPossibleOutcomes, List<Integer> a) {
         final List<List<Integer>> combinations = new ArrayList<>();
-        for (int i = 0; i < binomialCoefficient(a.size(), k); ++i) {
-            combinations.add(computeCombinationIdx(a, a.size(), k, i));
+        for (int i = 0; i < binomialCoefficient(n, k); ++i) {
+            combinations.add(computeCombinationIdx(a, n, k, i));
         }
         final List<Integer> sequence = new ArrayList<>();
         for (List<Integer> result : results) {
