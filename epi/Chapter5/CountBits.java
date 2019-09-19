@@ -1,6 +1,6 @@
 package epi.Chapter5;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 public final class CountBits {
@@ -16,7 +16,7 @@ public final class CountBits {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter5.CountBits");
+        TestRunner.run(args);
     }
 
     private CountBits() {

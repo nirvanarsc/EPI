@@ -1,6 +1,6 @@
 package epi.Chapter6;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 import java.util.HashSet;
@@ -68,7 +68,7 @@ public final class IsValidSudoku {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter6.IsValidSudoku");
+        TestRunner.run(args);
     }
 
     private IsValidSudoku() {

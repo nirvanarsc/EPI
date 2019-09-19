@@ -1,6 +1,6 @@
 package epi.Chapter5;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 
@@ -76,7 +76,7 @@ public final class RectangleIntersection {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter5.RectangleIntersection");
+        TestRunner.run(args);
     }
 
     private RectangleIntersection() {

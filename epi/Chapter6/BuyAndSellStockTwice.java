@@ -1,6 +1,6 @@
 package epi.Chapter6;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public final class BuyAndSellStockTwice {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter6.BuyAndSellStockTwice");
+        TestRunner.run(args);
     }
 
     private BuyAndSellStockTwice() {

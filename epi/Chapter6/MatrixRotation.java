@@ -1,6 +1,7 @@
-package epi;
+package epi.Chapter6;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
-import epi.test_framework.GenericTest;
+
 import java.util.List;
 public class MatrixRotation {
 
@@ -16,10 +17,6 @@ public class MatrixRotation {
   }
 
   public static void main(String[] args) {
-    System.exit(
-        GenericTest
-            .runFromAnnotations(args, "MatrixRotation.java",
-                                new Object() {}.getClass().getEnclosingClass())
-            .ordinal());
+    TestRunner.run(args);
   }
 }

@@ -1,7 +1,7 @@
 package epi.Chapter5;
 
-import epi.TestRunner;
 import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class ClosestIntSameWeight {
 
@@ -21,7 +21,7 @@ public final class ClosestIntSameWeight {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter5.ClosestIntSameWeight");
+        TestRunner.run(args);
     }
 
     private ClosestIntSameWeight() {

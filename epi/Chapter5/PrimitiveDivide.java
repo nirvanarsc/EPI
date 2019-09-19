@@ -1,6 +1,6 @@
 package epi.Chapter5;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 public final class PrimitiveDivide {
@@ -21,7 +21,7 @@ public final class PrimitiveDivide {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter5.PrimitiveDivide");
+        TestRunner.run(args);
     }
 
     private PrimitiveDivide() {

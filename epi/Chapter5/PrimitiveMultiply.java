@@ -1,6 +1,6 @@
 package epi.Chapter5;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 public final class PrimitiveMultiply {
@@ -36,7 +36,7 @@ public final class PrimitiveMultiply {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter5.PrimitiveMultiply");
+        TestRunner.run(args);
     }
 
     private PrimitiveMultiply() {

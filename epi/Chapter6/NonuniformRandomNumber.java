@@ -1,6 +1,6 @@
 package epi.Chapter6;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 import epi.test_framework.TimedExecutor;
 
@@ -85,7 +85,7 @@ public final class NonuniformRandomNumber {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter6.NonuniformRandomNumber");
+        TestRunner.run(args);
     }
 
     private NonuniformRandomNumber() {

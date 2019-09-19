@@ -1,6 +1,6 @@
 package epi.Chapter6;
 
-import epi.TestRunner;
+import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public final class IntAsArrayMultiply {
     }
 
     public static void main(String[] args) {
-        TestRunner.run(args, "epi.Chapter6.IntAsArrayMultiply");
+        TestRunner.run(args);
     }
 
     private IntAsArrayMultiply() {
