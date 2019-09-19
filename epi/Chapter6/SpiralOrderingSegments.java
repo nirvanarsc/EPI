@@ -17,7 +17,7 @@ public final class SpiralOrderingSegments {
 
     public static void matrixInSpiralOrder(List<List<Integer>> squareMatrix, List<Integer> res, int n) {
         if (n == squareMatrix.size() / 2) {
-            if ((squareMatrix.size() & 1) != 0) {
+            if ((squareMatrix.size() & 1) == 1) {
                 res.add(squareMatrix.get(n).get(n));
             }
             return;
