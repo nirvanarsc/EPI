@@ -14,17 +14,17 @@ import java.util.function.BiPredicate;
 
 public final class PhoneNumberMnemonic {
 
-    static final Map<Character, List<Character>> phoneMap = new HashMap<>();
+    private static final Map<Character, List<Character>> PHONE_MAP = new HashMap<>();
 
     static {
-        phoneMap.put('2', Arrays.asList('A', 'B', 'C'));
-        phoneMap.put('3', Arrays.asList('D', 'E', 'F'));
-        phoneMap.put('4', Arrays.asList('G', 'H', 'I'));
-        phoneMap.put('5', Arrays.asList('J', 'K', 'L'));
-        phoneMap.put('6', Arrays.asList('M', 'N', 'O'));
-        phoneMap.put('7', Arrays.asList('P', 'Q', 'R', 'S'));
-        phoneMap.put('8', Arrays.asList('T', 'U', 'V'));
-        phoneMap.put('9', Arrays.asList('W', 'X', 'Y', 'Z'));
+        PHONE_MAP.put('2', Arrays.asList('A', 'B', 'C'));
+        PHONE_MAP.put('3', Arrays.asList('D', 'E', 'F'));
+        PHONE_MAP.put('4', Arrays.asList('G', 'H', 'I'));
+        PHONE_MAP.put('5', Arrays.asList('J', 'K', 'L'));
+        PHONE_MAP.put('6', Arrays.asList('M', 'N', 'O'));
+        PHONE_MAP.put('7', Arrays.asList('P', 'Q', 'R', 'S'));
+        PHONE_MAP.put('8', Arrays.asList('T', 'U', 'V'));
+        PHONE_MAP.put('9', Arrays.asList('W', 'X', 'Y', 'Z'));
     }
 
     @EpiTest(testDataFile = "phone_number_mnemonic.tsv")
@@ -33,8 +33,8 @@ public final class PhoneNumberMnemonic {
         for (int i = phoneNumber.length() - 1; i >= 0; i--) {
             final char curr = phoneNumber.charAt(i);
             if (total.isEmpty()) {
-                if (phoneMap.containsKey(curr)) {
-                    for (Character c : phoneMap.get(curr)) {
+                if (PHONE_MAP.containsKey(curr)) {
+                    for (Character c : PHONE_MAP.get(curr)) {
                         final StringBuilder sb = new StringBuilder();
                         sb.append(c);
                         total.add(sb);
@@ -46,8 +46,8 @@ public final class PhoneNumberMnemonic {
                 }
             } else {
                 final List<StringBuilder> temp = new ArrayList<>();
-                if (phoneMap.containsKey(curr)) {
-                    for (Character c : phoneMap.get(curr)) {
+                if (PHONE_MAP.containsKey(curr)) {
+                    for (Character c : PHONE_MAP.get(curr)) {
                         appendToSb(total, c, temp);
                     }
                 } else {
