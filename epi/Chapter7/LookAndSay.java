@@ -31,7 +31,7 @@ public final class LookAndSay {
         return s;
     }
 
-    private static String lookAndSay(String str) {
+    public static String lookAndSay(String str) {
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             int count = 1;
