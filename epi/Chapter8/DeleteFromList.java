@@ -10,7 +10,7 @@ import java.util.Objects;
 public final class DeleteFromList {
 
     // Delete the node immediately following aNode. Assumes aNode is not a tail.
-    public static void deleteList(ListNode<Integer> aNode) {
+    public static void deleteNextNode(ListNode<Integer> aNode) {
         aNode.next = aNode.next.next;
     }
 
@@ -34,7 +34,7 @@ public final class DeleteFromList {
 
         final ListNode<Integer> finalPrev = prev;
 
-        executor.run(() -> deleteList(Objects.requireNonNull(finalPrev)));
+        executor.run(() -> deleteNextNode(Objects.requireNonNull(finalPrev)));
 
         return head;
     }
