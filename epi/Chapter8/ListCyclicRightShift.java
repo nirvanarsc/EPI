@@ -7,16 +7,16 @@ import epi.utils.TestRunner;
 public final class ListCyclicRightShift {
 
     @EpiTest(testDataFile = "list_cyclic_right_shift.tsv")
-    public static ListNode<Integer> cyclicallyRightShiftList(ListNode<Integer> L, int k) {
-        if (L == null || k == 0) return L;
+    public static ListNode<Integer> cyclicallyRightShiftList(ListNode<Integer> l, int k) {
+        if (l == null || k == 0) return l;
 
         int i = 1;
-        ListNode<Integer> tail = L;
+        ListNode<Integer> tail = l;
         while (tail.next != null) {
             i++;
             tail = tail.next;
         }
-        tail.next = L;
+        tail.next = l;
 
         int diff = i - (k % i);
         while (diff-- > 0) {
