@@ -1,12 +1,9 @@
-
 package epi;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-
 
 public class ListNode<T> {
     public T data;
@@ -104,7 +101,7 @@ public class ListNode<T> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(data);
+        return new Object().hashCode();
     }
 
     @Override
