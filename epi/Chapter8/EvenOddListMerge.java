@@ -18,7 +18,7 @@ public final class EvenOddListMerge {
         int turn = 0;
         for (ListNode<Integer> iter = l; iter != null; iter = iter.next) {
             tails.get(turn).next = iter;
-            tails.set(turn, tails.get(turn).next);
+            tails.set(turn, iter);
             turn ^= 1;
         }
         tails.get(1).next = null;
