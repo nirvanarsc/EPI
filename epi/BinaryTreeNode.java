@@ -1,57 +1,53 @@
-
 package epi;
 
 import epi.test_framework.BinaryTreeUtils;
 
 import java.util.Objects;
 
-
 public class BinaryTreeNode<T> {
-  public T data;
-  public BinaryTreeNode<T> left, right;
-  
+    public T data;
+    public BinaryTreeNode<T> left, right;
 
-  public BinaryTreeNode() {}
-
-  public BinaryTreeNode(T data) { this.data = data; }
-
-  public BinaryTreeNode(T data, BinaryTreeNode<T> left,
-                        BinaryTreeNode<T> right) {
-    this.data = data;
-    this.left = left;
-    this.right = right;
-  }
-
-  @Override public boolean equals(Object o) {  // TODO Remove equal override
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    public BinaryTreeNode() {
     }
 
-    BinaryTreeNode that = (BinaryTreeNode)o;
-    if (data != null ? !data.equals(that.data) : that.data != null) {
-      return false;
+    public BinaryTreeNode(T data) {
+        this.data = data;
     }
-    if (left != null ? !left.equals(that.left) : that.left != null) {
-      return false;
-    }
-    if (right != null ? !right.equals(that.right) : that.right != null) {
-      return false;
-    }
-    return true;
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(data, left, right);
-  }
+    public BinaryTreeNode(T data, BinaryTreeNode<T> left, BinaryTreeNode<T> right) {
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
 
-  @Override
-  public String toString() {
-    return BinaryTreeUtils.binaryTreeToString(this);
-  }
-  
+    @Override
+    @SuppressWarnings("rawtypes")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final BinaryTreeNode other = (BinaryTreeNode) o;
+        if (!Objects.equals(data, other.data)) {
+            return false;
+        }
+        if (!Objects.equals(left, other.left)) {
+            return false;
+        }
+        return Objects.equals(right, other.right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, left, right);
+    }
+
+    @Override
+    public String toString() {
+        return BinaryTreeUtils.binaryTreeToString(this);
+    }
 }
-
