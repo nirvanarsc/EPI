@@ -5,32 +5,36 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.TestFailure;
 import epi.utils.TestRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class CircularQueue {
 
     public static class Queue {
+        List<Integer> elements;
+        int enq;
+        int deq;
+
         public Queue(int capacity) {
+            elements = new ArrayList<>(capacity);
         }
 
         public void enqueue(Integer x) {
-            // TODO - you fill in here.
+            elements.add(x);
+            enq++;
         }
 
         public Integer dequeue() {
-            // TODO - you fill in here.
-            return 0;
+            return !elements.isEmpty() ? elements.get(deq++) : null;
         }
 
         public int size() {
-            // TODO - you fill in here.
-            return 0;
+            return enq - deq;
         }
 
         @Override
         public String toString() {
-            // TODO - you fill in here.
-            return super.toString();
+            return elements.subList(deq, enq).toString();
         }
     }
 
