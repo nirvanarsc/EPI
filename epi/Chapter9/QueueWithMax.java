@@ -10,19 +10,24 @@ import java.util.NoSuchElementException;
 
 public class QueueWithMax {
 
+    StackWithMax.Stack enq = new StackWithMax.Stack();
+    StackWithMax.Stack deq = new StackWithMax.Stack();
+
     public void enqueue(Integer x) {
-        // TODO - you fill in here.
-        return;
+        enq.push(x);
     }
 
     public Integer dequeue() {
-        // TODO - you fill in here.
-        return 0;
+        if (deq.empty()) {
+            while (!enq.empty()) {
+                deq.push(enq.pop());
+            }
+        }
+        return deq.pop();
     }
 
     public Integer max() {
-        // TODO - you fill in here.
-        return 0;
+        return Math.max(enq.max(), deq.max());
     }
 
     @EpiUserType(ctorParams = {String.class, int.class})
