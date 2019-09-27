@@ -8,17 +8,16 @@ public final class SumRootToLeaf {
 
     @EpiTest(testDataFile = "sum_root_to_leaf.tsv")
     public static int sumRootToLeaf(BinaryTreeNode<Integer> tree) {
-        return helper(tree, 0);
+        return dfs(tree, 0);
     }
 
-    public static int helper(BinaryTreeNode<Integer> node, int parentSum) {
+    public static int dfs(BinaryTreeNode<Integer> node, int parentSum) {
         if (node == null) {
             return 0;
-        } else if (node.left == null && node.right == null) {
-            return 2 * parentSum + node.data;
-        } else {
-            return helper(node.right, 2 * parentSum + node.data) + helper(node.left, 2 * parentSum + node.data);
         }
+        final int val = parentSum << 1 | node.data;
+
+        return node.left == node.right ? val : dfs(node.right, val) + dfs(node.left, val);
     }
 
     public static void main(String[] args) {
