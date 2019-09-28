@@ -9,11 +9,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class TimedExecutor {
-  private TestTimer timer;
-  private long timeoutSeconds;
+  private final TestTimer timer;
+  private final long timeoutSeconds;
 
   public TimedExecutor(long timeoutSeconds) {
-    this.timer = new TestTimer();
+    timer = new TestTimer();
     this.timeoutSeconds = timeoutSeconds;
   }
 
@@ -34,7 +34,7 @@ public class TimedExecutor {
       try {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<ReturnType> future =
-            executor.submit(() -> { return timedCall(func); });
+            executor.submit(() -> timedCall(func));
 
         // This does not cancel the already-scheduled task.
         executor.shutdown();
@@ -42,7 +42,7 @@ public class TimedExecutor {
         return future.get(timeoutSeconds, TimeUnit.SECONDS);
 
       } catch (java.util.concurrent.TimeoutException e) {
-        throw new epi.test_framework.TimeoutException(timeoutSeconds);
+        throw new TimeoutException(timeoutSeconds);
       } catch (InterruptedException e) {
         throw new RuntimeException(e.getMessage());
       } catch (ExecutionException e) {
