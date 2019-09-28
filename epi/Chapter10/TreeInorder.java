@@ -18,7 +18,7 @@ public final class TreeInorder {
         return res;
     }
 
-    static void helper(BinaryTreeNode<Integer> node, List<Integer> res) {
+    private static void helper(BinaryTreeNode<Integer> node, List<Integer> res) {
         if (node == null) {
             return;
         }
@@ -28,20 +28,20 @@ public final class TreeInorder {
     }
 
     @EpiTest(testDataFile = "tree_inorder.tsv")
-    public static List<Integer> inorderTraversalIterative(BinaryTreeNode<Integer> node) {
+    public static List<Integer> inorderTraversalIterative(BinaryTreeNode<Integer> tree) {
         final List<Integer> res = new ArrayList<>();
         final Deque<BinaryTreeNode<Integer>> s = new LinkedList<>();
-        BinaryTreeNode<Integer> curr = node;
+        BinaryTreeNode<Integer> curr = tree;
 
         while (!s.isEmpty() || curr != null) {
-            if (curr != null) {
+            while (curr != null) {
                 s.addFirst(curr);
                 curr = curr.left;
-            } else {
-                curr = s.removeFirst();
-                res.add(curr.data);
-                curr = curr.right;
             }
+
+            curr = s.removeFirst();
+            res.add(curr.data);
+            curr = curr.right;
         }
 
         return res;

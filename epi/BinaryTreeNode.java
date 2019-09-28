@@ -50,4 +50,15 @@ public class BinaryTreeNode<T> {
     public String toString() {
         return BinaryTreeUtils.binaryTreeToString(this);
     }
+
+    public static BinaryTreeNode<Integer> testTree() {
+        final BinaryTreeNode<Integer> t = new BinaryTreeNode<>(8);
+        t.left = new BinaryTreeNode<>(3);
+        t.left.left = new BinaryTreeNode<>(1);
+        t.left.right = new BinaryTreeNode<>(6);
+        t.right = new BinaryTreeNode<>(10);
+        t.right.right = new BinaryTreeNode<>(14);
+
+        return t;
+    }
 }
