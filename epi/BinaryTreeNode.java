@@ -57,6 +57,7 @@ public class BinaryTreeNode<T> {
         t.left.left = new BinaryTreeNode<>(1);
         t.left.right = new BinaryTreeNode<>(6);
         t.right = new BinaryTreeNode<>(10);
+        t.right.left = new BinaryTreeNode<>(9);
         t.right.right = new BinaryTreeNode<>(14);
 
         return t;
