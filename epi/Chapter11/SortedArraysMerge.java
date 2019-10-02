@@ -46,6 +46,20 @@ public final class SortedArraysMerge {
         return result;
     }
 
+    @EpiTest(testDataFile = "sorted_arrays_merge.tsv")
+    public static List<Integer> mergeSortedArrays2(List<List<Integer>> sortedArrays) {
+        final PriorityQueue<Integer> minHeap = new PriorityQueue<>(Comparator.naturalOrder());
+        final List<Integer> result = new ArrayList<>();
+
+        sortedArrays.forEach(minHeap::addAll);
+
+        while (!minHeap.isEmpty()) {
+            result.add(minHeap.poll());
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         TestRunner.run(args);
     }
