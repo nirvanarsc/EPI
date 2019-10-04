@@ -79,19 +79,18 @@ public final class KClosestStars {
     public static List<Double> expectedType;
 
     @EpiTestComparator
-    public static BiPredicate<List<Double>, List<Star>> comp =
-            (expected, result) -> {
-                if (expected.size() != result.size()) {
-                    return false;
-                }
-                Collections.sort(result);
-                for (int i = 0; i < result.size(); i++) {
-                    if (!expected.get(i).equals(result.get(i).distance())) {
-                        return false;
-                    }
-                }
-                return true;
-            };
+    public static BiPredicate<List<Double>, List<Star>> comp = (expected, result) -> {
+        if (expected.size() != result.size()) {
+            return false;
+        }
+        Collections.sort(result);
+        for (int i = 0; i < result.size(); i++) {
+            if (!expected.get(i).equals(result.get(i).distance())) {
+                return false;
+            }
+        }
+        return true;
+    };
 
     public static void main(String[] args) {
         TestRunner.run(args);

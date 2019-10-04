@@ -1,13 +1,13 @@
 package epi.Chapter11;
 
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
-
-import epi.test_framework.EpiTest;
-import epi.utils.TestRunner;
 
 public final class OnlineMedian {
 
@@ -62,9 +62,7 @@ public final class OnlineMedian {
 
         while (sequence.hasNext()) {
             final int curr = sequence.next();
-            if (min.isEmpty()) {
-                min.add(curr);
-            } else if (curr >= min.peek()) {
+            if (min.isEmpty() || curr >= min.peek()) {
                 min.add(curr);
             } else {
                 max.add(curr);
