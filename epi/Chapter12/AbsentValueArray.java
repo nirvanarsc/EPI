@@ -11,12 +11,12 @@ public final class AbsentValueArray {
 
     @EpiTest(testDataFile = "absent_value_array.tsv")
     public static int findMissingElement(Iterable<Integer> stream) {
-        final int[] cache = new int[100];
+        final int[] cache = new int[1000];
         for (Integer integer : stream) {
             cache[integer / Integer.SIZE] |= 1 << integer % Integer.SIZE;
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < cache.length; i++) {
             int curr = cache[i];
             if (curr != 0xffffffff) {
                 int j = 0;
