@@ -11,19 +11,10 @@ import java.util.Set;
 import epi.test_framework.EpiTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
+import epi.utils.Subarray;
 import epi.utils.TestRunner;
 
 public final class SmallestSubarrayCoveringSet {
-
-    private static final class Subarray {
-        public Integer start;
-        public Integer end;
-
-        private Subarray(Integer start, Integer end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
 
     public static Subarray findSmallestSubarrayCoveringSet3(Iterator<String> iter, Set<String> keywords) {
         final Map<String, Integer> dict = new LinkedHashMap<>();
