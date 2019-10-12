@@ -25,30 +25,22 @@ public final class SmallestSubarrayCoveringSet {
         }
     }
 
-    public static Subarray findSmallestSubarrayCoveringSet3(Iterator<String> iter, Set<String> queryStrings) {
-        final LinkedHashMap<String, Integer> dict = new LinkedHashMap<>();
+    public static Subarray findSmallestSubarrayCoveringSet3(Iterator<String> iter, Set<String> keywords) {
+        final Map<String, Integer> dict = new LinkedHashMap<>();
         final Subarray res = new Subarray(-1, -1);
-        for (String s : queryStrings) { dict.put(s, -1); }
-        int numStringsFromQueryStringsSeenSoFar = 0;
         int idx = 0;
         while (iter.hasNext()) {
             final String s = iter.next();
-            if (dict.containsKey(s)) {
-                final Integer it = dict.get(s);
-                if (it == -1) {
-                    numStringsFromQueryStringsSeenSoFar++;
-                }
-                // dict.put(s,idx) won't work because it does not move the entry to the front of the queue
-                // if an entry with key s is already present.
-                // So we explicitly remove the existing entry with key s, then put (s,idx).
-                dict.remove(s);
+            if (keywords.contains(s)) {
+                // Updating the value of an existing key does not update the internal access queue.
+                // Therefore we explicitly remove the existing entry with key s and then put (s,idx).
+                dict.computeIfPresent(s, (k, v) -> null);
                 dict.put(s, idx);
             }
-            if (numStringsFromQueryStringsSeenSoFar == queryStrings.size()) {
-                // We have seen all strings in queryStrings, let’s get to work.
-                if ((res.start == -1 && res.end == -1)
-                    || idx - getValueForFirstEntry(dict) < res.end - res.start) {
-                    res.start = getValueForFirstEntry(dict);
+            if (dict.size() == keywords.size()) {
+                final Integer firstEntry = dict.entrySet().iterator().next().getValue();
+                if ((res.start == -1 && res.end == -1) || idx - firstEntry < res.end - res.start) {
+                    res.start = firstEntry;
                     res.end = idx;
                 }
             }
@@ -57,39 +49,19 @@ public final class SmallestSubarrayCoveringSet {
         return res;
     }
 
-    private static Integer getValueForFirstEntry(LinkedHashMap<String, Integer> m) {
-        return m.entrySet().iterator().next().getValue();
-    }
-
     public static Subarray findSmallestSubarrayCoveringSet2(List<String> list, Set<String> keywords) {
-        final Map<String, Integer> keywordsToCover = new HashMap<>();
+        final Map<String, Integer> dict = new HashMap<>();
         final Subarray result = new Subarray(-1, -1);
-        for (String keyword : keywords) {
-            keywordsToCover.merge(keyword, 1, Integer::sum);
-        }
-
-        int remainingToCover = keywords.size();
         for (int left = 0, right = 0; right < list.size(); ++right) {
-            Integer keywordCount = keywordsToCover.get(list.get(right));
-            if (keywordCount != null) {
-                keywordsToCover.put(list.get(right), --keywordCount);
-                if (keywordCount >= 0) {
-                    --remainingToCover;
-                }
+            if (keywords.contains(list.get(right))) {
+                dict.merge(list.get(right), 1, Integer::sum);
             }
-            while (remainingToCover == 0) {
+            while (dict.size() == keywords.size()) {
                 if ((result.start == -1 && result.end == -1) || right - left < result.end - result.start) {
                     result.start = left;
                     result.end = right;
                 }
-                keywordCount = keywordsToCover.get(list.get(left));
-                if (keywordCount != null) {
-                    keywordsToCover.put(list.get(left), ++keywordCount);
-                    if (keywordCount > 0) {
-                        ++remainingToCover;
-                    }
-                }
-                ++left;
+                dict.computeIfPresent(list.get(left++), (k, v) -> v == 1 ? null : v - 1);
             }
         }
         return result;
