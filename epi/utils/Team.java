@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Team {
-    List<Player> players;
+    public List<Player> players;
 
     public Team(List<Integer> height) {
         players = height.stream()
@@ -13,7 +13,7 @@ public class Team {
                         .collect(Collectors.toList());
     }
 
-    private static final class Player implements Comparable<Player> {
+    public static final class Player implements Comparable<Player> {
         public Integer height;
 
         private Player(Integer h) { height = h; }

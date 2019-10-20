@@ -1,5 +1,6 @@
 package epi.Chapter14;
 
+import java.util.Comparator;
 import java.util.List;
 
 import epi.test_framework.EpiTest;
@@ -26,8 +27,14 @@ public final class IsArrayDominated {
         }
     }
 
-    // Checks if team0 can be placed in front of team1.
     public static boolean validPlacementExists(Team team0, Team team1) {
+        team0.players.sort(Comparator.naturalOrder());
+        team1.players.sort(Comparator.naturalOrder());
+        for (int i = 0; i < team0.players.size(); i++) {
+            if (team1.players.get(i).height <= team0.players.get(i).height) {
+                return false;
+            }
+        }
         return true;
     }
 
