@@ -1,6 +1,5 @@
 package epi.Chapter14;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import epi.test_framework.EpiTest;
@@ -54,15 +54,12 @@ public final class GroupEqualEntries {
     }
 
     public static void groupByAge(List<Person> people) {
-        final Map<Integer, List<Person>> personIntegerMap = new HashMap<>();
-        for (Person p : people) {
-            personIntegerMap.putIfAbsent(p.age, new ArrayList<>());
-            personIntegerMap.get(p.age).add(p);
-        }
-        final List<Person> byAge = personIntegerMap.values()
-                                                   .stream()
-                                                   .flatMap(Collection::stream)
-                                                   .collect(Collectors.toList());
+        final List<Person> byAge = people.stream()
+                                         .collect(Collectors.groupingBy(person -> person.age))
+                                         .values()
+                                         .stream()
+                                         .flatMap(Collection::stream)
+                                         .collect(Collectors.toList());
         people.clear();
         people.addAll(byAge);
     }
@@ -94,9 +91,9 @@ public final class GroupEqualEntries {
         if (people.isEmpty()) {
             return;
         }
-        final Map<Person, Integer> values = buildMultiset(people);
+        final Map<Person, Long> values = buildMultiset(people);
         executor.run(() -> groupByAge(people));
-        final Map<Person, Integer> newValues = buildMultiset(people);
+        final Map<Person, Long> newValues = buildMultiset(people);
         verify(people, values, newValues);
     }
 
@@ -105,23 +102,19 @@ public final class GroupEqualEntries {
         if (people.isEmpty()) {
             return;
         }
-        final Map<Person, Integer> values = buildMultiset(people);
+        final Map<Person, Long> values = buildMultiset(people);
         executor.run(() -> groupByAge2(people));
-        final Map<Person, Integer> newValues = buildMultiset(people);
+        final Map<Person, Long> newValues = buildMultiset(people);
         verify(people, values, newValues);
     }
 
-    private static Map<Person, Integer> buildMultiset(List<Person> people) {
-        final Map<Person, Integer> m = new HashMap<>();
-        for (Person p : people) {
-            m.merge(p, 1, Integer::sum);
-        }
-        return m;
+    private static Map<Person, Long> buildMultiset(List<Person> people) {
+        return people.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
     private static void verify(List<Person> people,
-                               Map<Person, Integer> values,
-                               Map<Person, Integer> newValues) throws TestFailure {
+                               Map<Person, Long> values,
+                               Map<Person, Long> newValues) throws TestFailure {
         if (!values.equals(newValues)) {
             throw new TestFailure("Entry set changed");
         }
