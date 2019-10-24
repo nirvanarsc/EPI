@@ -7,6 +7,7 @@ import java.util.List;
 public class AddingCredits {
 
   public static class ClientsCreditsInfo {
+
     public void insert(String clientID, int c) {
       // TODO - you fill in here.
       return;
