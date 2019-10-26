@@ -1,13 +1,14 @@
 package epi.Chapter15;
 
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.TreeSet;
 
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
-public final class MinimumDistance3SortedArrays {
+public final class MinimumDistanceKSortedArrays {
 
     public static class ArrayData implements Comparable<ArrayData> {
         public int val;
@@ -46,7 +47,7 @@ public final class MinimumDistance3SortedArrays {
 
     @EpiTest(testDataFile = "minimum_distance_3_sorted_arrays.tsv")
     public static int findMinDistanceSortedArrays(List<List<Integer>> sortedArrays) {
-        final TreeSet<ArrayData> integers = new TreeSet<>();
+        final NavigableSet<ArrayData> integers = new TreeSet<>();
         final int[] indexes = new int[sortedArrays.size()];
         int res = Integer.MAX_VALUE;
 
@@ -56,19 +57,18 @@ public final class MinimumDistance3SortedArrays {
 
         while (true) {
             res = Math.min(res, integers.last().val - integers.first().val);
-            final int currIdx = integers.pollFirst().idx;
-            if (indexes[currIdx] == sortedArrays.get(currIdx).size() - 1) {
-                break;
+            final ArrayData curr = integers.pollFirst();
+            assert curr != null;
+            if (indexes[curr.idx] == sortedArrays.get(curr.idx).size() - 1) {
+                return res;
             }
-            integers.add(new ArrayData(sortedArrays.get(currIdx).get(++indexes[currIdx]), currIdx));
+            integers.add(new ArrayData(sortedArrays.get(curr.idx).get(++indexes[curr.idx]), curr.idx));
         }
-
-        return res;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private MinimumDistance3SortedArrays() {}
+    private MinimumDistanceKSortedArrays() {}
 }
