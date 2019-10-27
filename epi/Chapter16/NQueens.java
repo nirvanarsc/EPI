@@ -6,7 +6,6 @@ import java.util.function.BiPredicate;
 
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiTestComparator;
-import epi.test_framework.LexicographicalListComparator;
 import epi.utils.TestRunner;
 
 public final class NQueens {
@@ -43,14 +42,7 @@ public final class NQueens {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = (expected, result) -> {
-        if (result == null) {
-            return false;
-        }
-        expected.sort(new LexicographicalListComparator<>());
-        result.sort(new LexicographicalListComparator<>());
-        return expected.equals(result);
-    };
+    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = TestRunner.comp;
 
     public static void main(String[] args) {
         TestRunner.run(args);

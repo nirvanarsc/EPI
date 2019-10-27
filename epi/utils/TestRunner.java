@@ -1,6 +1,10 @@
 package epi.utils;
 
+import java.util.List;
+import java.util.function.BiPredicate;
+
 import epi.test_framework.GenericTest;
+import epi.test_framework.LexicographicalListComparator;
 
 public final class TestRunner {
 
@@ -15,4 +19,13 @@ public final class TestRunner {
 
     private TestRunner() {
     }
+
+    public static final BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = (expected, result) -> {
+        if (result == null) {
+            return false;
+        }
+        expected.sort(new LexicographicalListComparator<>());
+        result.sort(new LexicographicalListComparator<>());
+        return expected.equals(result);
+    };
 }
