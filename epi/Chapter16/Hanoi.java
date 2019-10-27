@@ -60,10 +60,7 @@ public final class Hanoi {
             pegs.get(toPeg).addFirst(pegs.get(fromPeg).removeFirst());
         }
 
-        final List<Deque<Integer>> expectedPegs1 = generatePegs(1, numRings, 3);
-        final List<Deque<Integer>> expectedPegs2 = generatePegs(2, numRings, 3);
-
-        if (!pegs.equals(expectedPegs1) && !pegs.equals(expectedPegs2)) {
+        if (!pegs.equals(generatePegs(2, numRings, 3))) {
             throw new TestFailure("Pegs are not placed in the right configuration");
         }
     }
