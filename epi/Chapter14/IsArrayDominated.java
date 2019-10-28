@@ -20,11 +20,12 @@ public final class IsArrayDominated {
         final Team t0 = new Team(team0);
         final Team t1 = new Team(team1);
 
-        final boolean result1 = executor.run(() -> validPlacementExists(t0, t1));
-        final boolean result2 = executor.run(() -> validPlacementExists(t1, t0));
-        if (result1 != expected1 || result2 != expected2) {
-            throw new TestFailure("");
-        }
+        executor.run(() -> {
+            if (validPlacementExists(t0, t1) != expected1 || validPlacementExists(t1, t0) != expected2) {
+                throw new TestFailure();
+            }
+            return 0;
+        });
     }
 
     public static boolean validPlacementExists(Team team0, Team team1) {

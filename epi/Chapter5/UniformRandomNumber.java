@@ -1,15 +1,16 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-import epi.test_framework.TimedExecutor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import static epi.test_framework.RandomSequenceChecker.checkSequenceIsUniformlyRandom;
 import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import epi.test_framework.EpiTest;
+import epi.test_framework.TimedExecutor;
+import epi.utils.TestRunner;
 
 public final class UniformRandomNumber {
 
@@ -20,17 +21,11 @@ public final class UniformRandomNumber {
 
     public static int uniformRandom(int lowerBound, int upperBound) {
         final int limit = upperBound - lowerBound;
-        int idx = Integer.SIZE - 1;
-
-        while ((limit & (1 << --idx)) == 0) {
-        }
 
         while (true) {
             int res = 0;
-            for (int i = 0; i <= idx; i++) {
-                if (zeroOneRandom() == 1) {
-                    res |= 1 << i;
-                }
+            for (int i = 0; (1 << i) <= limit; i++) {
+                res |= zeroOneRandom() << i;
             }
             if (res <= limit) {
                 return lowerBound + res;
@@ -38,25 +33,22 @@ public final class UniformRandomNumber {
         }
     }
 
-    private static boolean uniformRandomRunner(TimedExecutor executor, int lowerBound, int upperBound) throws Exception {
-        final List<Integer> results = new ArrayList<>();
+    private static boolean uniformRandomRunner(TimedExecutor executor,
+                                               int lowerBound,
+                                               int upperBound) throws Exception {
+        final List<Integer> results = executor
+                .run(() -> IntStream.range(0, 100000)
+                                    .boxed()
+                                    .map(i -> uniformRandom(lowerBound, upperBound) - lowerBound)
+                                    .collect(Collectors.toList()));
 
-        executor.run(() -> {
-            for (int i = 0; i < 100000; ++i) {
-                results.add(uniformRandom(lowerBound, upperBound));
-            }
-        });
-
-        final List<Integer> sequence = new ArrayList<>();
-
-        for (Integer result : results) {
-            sequence.add(result - lowerBound);
-        }
-        return checkSequenceIsUniformlyRandom(sequence, upperBound - lowerBound + 1, 0.01);
+        return checkSequenceIsUniformlyRandom(results, upperBound - lowerBound + 1, 0.01);
     }
 
     @EpiTest(testDataFile = "uniform_random_number.tsv")
-    public static void uniformRandomWrapper(TimedExecutor executor, int lowerBound, int upperBound) throws Exception {
+    public static void uniformRandomWrapper(TimedExecutor executor,
+                                            int lowerBound,
+                                            int upperBound) throws Exception {
         runFuncWithRetries(() -> uniformRandomRunner(executor, lowerBound, upperBound));
     }
 

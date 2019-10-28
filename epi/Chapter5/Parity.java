@@ -1,44 +1,41 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
+
 public final class Parity {
-    private static final Map<Integer, Integer> table = new HashMap<>();
+
+    private static final Map<Integer, Integer> CACHE = new HashMap<>();
+    private static final int MASK = 0xf;
+    private static final int WORD_SIZE = 4;
 
     static {
-        table.put(15, 0);
-        table.put(14, 1);
-        table.put(13, 1);
-        table.put(11, 1);
-        table.put(7, 1);
-        table.put(12, 0);
-        table.put(9, 0);
-        table.put(3, 0);
-        table.put(6, 0);
-        table.put(10, 0);
-        table.put(5, 0);
-        table.put(8, 1);
-        table.put(4, 1);
-        table.put(2, 1);
-        table.put(1, 1);
-        table.put(0, 0);
-    }
-
-    private Parity() {
+        CACHE.put(15, 0);
+        CACHE.put(14, 1);
+        CACHE.put(13, 1);
+        CACHE.put(11, 1);
+        CACHE.put(7, 1);
+        CACHE.put(12, 0);
+        CACHE.put(9, 0);
+        CACHE.put(3, 0);
+        CACHE.put(6, 0);
+        CACHE.put(10, 0);
+        CACHE.put(5, 0);
+        CACHE.put(8, 1);
+        CACHE.put(4, 1);
+        CACHE.put(2, 1);
+        CACHE.put(1, 1);
+        CACHE.put(0, 0);
     }
 
     @EpiTest(testDataFile = "parity.tsv")
     public static short parity(long x) {
         short res = 0;
-        while (x != 0) {
-            final long mask = (1 << 4) - 1;
-            final long curr = x & mask;
-            res ^= table.get((int) curr);
-            x >>= 4;
+        for (int i = 0; i < Long.SIZE / WORD_SIZE; i++, x >>= WORD_SIZE) {
+            res ^= CACHE.get((int) (x & MASK));
         }
         return res;
     }
@@ -56,5 +53,8 @@ public final class Parity {
 
     public static void main(String[] args) {
         TestRunner.run(args);
+    }
+
+    private Parity() {
     }
 }

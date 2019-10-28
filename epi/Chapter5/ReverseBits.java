@@ -1,14 +1,16 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class ReverseBits {
 
     private static final Map<Long, Long> table = new HashMap<>();
+    private static final int WORD_SIZE = 4;
+    private static final int BIT_MASK = 0xf;
 
     static {
         table.put(15L, 15L);
@@ -41,11 +43,9 @@ public final class ReverseBits {
 
     @EpiTest(testDataFile = "reverse_bits.tsv")
     public static long reverseBits2(long x) {
-        final int WORD_SIZE = 4;
-        final int BIT_MASK = 15;
         long res = 0;
         final int loops = Long.SIZE / WORD_SIZE;
-        for (int i = 0; i <= loops; i++) {
+        for (int i = 0; i < loops; i++) {
             res |= table.get((x >> (i * WORD_SIZE)) & BIT_MASK) << ((loops - i - 1) * WORD_SIZE);
         }
         return res;
