@@ -1,16 +1,15 @@
 package epi.Chapter7;
 
-import epi.test_framework.EpiTest;
-import epi.test_framework.EpiTestComparator;
-import epi.utils.TestRunner;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
+
+import epi.test_framework.EpiTest;
+import epi.test_framework.EpiTestComparator;
+import epi.utils.TestRunner;
 
 public final class PhoneNumberMnemonic {
 
@@ -75,14 +74,7 @@ public final class PhoneNumberMnemonic {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<String>, List<String>> comp = (expected, result) -> {
-        if (result == null) {
-            return false;
-        }
-        Collections.sort(expected);
-        Collections.sort(result);
-        return expected.equals(result);
-    };
+    public static BiPredicate<List<String>, List<String>> comp = TestRunner.STR_COMP;
 
     public static void main(String[] args) {
         TestRunner.run(args);

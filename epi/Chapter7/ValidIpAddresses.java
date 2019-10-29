@@ -1,13 +1,12 @@
 package epi.Chapter7;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiTestComparator;
 import epi.utils.TestRunner;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiPredicate;
 
 public final class ValidIpAddresses {
 
@@ -48,14 +47,7 @@ public final class ValidIpAddresses {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<String>, List<String>> comp = (expected, result) -> {
-        if (result == null) {
-            return false;
-        }
-        Collections.sort(expected);
-        Collections.sort(result);
-        return expected.equals(result);
-    };
+    public static BiPredicate<List<String>, List<String>> comp = TestRunner.STR_COMP;
 
     public static void main(String[] args) {
         TestRunner.run(args);

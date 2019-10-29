@@ -10,6 +10,16 @@ import epi.test_framework.LexicographicalListComparator;
 public final class TestRunner {
 
     public static final
+    BiPredicate<List<String>, List<String>> STR_COMP = (expected, result) -> {
+        if (result == null) {
+            return false;
+        }
+        Collections.sort(expected);
+        Collections.sort(result);
+        return expected.equals(result);
+    };
+
+    public static final
     BiPredicate<List<List<Integer>>, List<List<Integer>>> COMP = (expected, result) -> {
         if (result == null) {
             return false;
