@@ -74,7 +74,7 @@ public final class PhoneNumberMnemonic {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<String>, List<String>> comp = TestRunner.STR_COMP;
+    public static BiPredicate<List<String>, List<String>> comp = TestRunner.getSimpleComp();
 
     public static void main(String[] args) {
         TestRunner.run(args);

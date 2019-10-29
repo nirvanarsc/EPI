@@ -64,7 +64,7 @@ public final class PowerSet {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = TestRunner.NESTED_COMP;
+    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = TestRunner.getComp(true);
 
     public static void main(String[] args) {
         TestRunner.run(args);

@@ -30,7 +30,7 @@ public final class Combinations {
     }
 
     @EpiTestComparator
-    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = TestRunner.COMP;
+    public static BiPredicate<List<List<Integer>>, List<List<Integer>>> comp = TestRunner.getComp(false);
 
     public static void main(String[] args) {
         TestRunner.run(args);
