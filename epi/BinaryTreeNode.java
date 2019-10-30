@@ -1,8 +1,11 @@
 package epi;
 
-import epi.test_framework.BinaryTreeUtils;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
+
+import epi.test_framework.BinaryTreeUtils;
 
 public class BinaryTreeNode<T> {
     public T data;
@@ -61,5 +64,20 @@ public class BinaryTreeNode<T> {
         t.right.right = new BinaryTreeNode<>(14);
 
         return t;
+    }
+
+    public static List<Integer> serialize(BinaryTreeNode<Integer> tree) {
+        final List<Integer> result = new ArrayList<>();
+        final Stack<BinaryTreeNode<Integer>> stack = new Stack<>();
+        stack.push(tree);
+        while (!stack.empty()) {
+            final BinaryTreeNode<Integer> p = stack.pop();
+            result.add(p == null ? 0 : 1);
+            if (p != null) {
+                stack.push(p.left);
+                stack.push(p.right);
+            }
+        }
+        return result;
     }
 }
