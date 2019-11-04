@@ -27,7 +27,7 @@ public final class GrayCode {
 
     public static List<Integer> grayCode2(int numBits) {
         final List<Integer> result = new ArrayList<>(Collections.singletonList(0));
-        directedGrayCode(numBits, new HashSet<>(Collections.singletonList(0)), result);
+        directedGrayCode(numBits, new HashSet<>(result), result);
         return result;
     }
 
