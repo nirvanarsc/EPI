@@ -11,25 +11,20 @@ public final class NumberOfTraversalsStaircase {
     }
 
     private static int dp(int top, int maximumStep, int[] cache) {
-        if (top == 0) {
+        if (top <= 1) {
             return 1;
         }
-        if (top < 0) {
-            return 0;
-        }
-        int res = 0;
-        for (int i = 1; i <= maximumStep; i++) {
-            if (top - i >= 0 && cache[top - i] == 0) {
-                cache[top - i] = dp(top - i, maximumStep, cache);
+        if (cache[top] == 0) {
+            for (int i = 1; i <= maximumStep && top - i >= 0; i++) {
+                cache[top] += dp(top - i, maximumStep, cache);
             }
-            res += (top - i) < 0 ? 0 : cache[top - i];
         }
-        return res;
+        return cache[top];
     }
-
-    private NumberOfTraversalsStaircase() {}
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
+
+    private NumberOfTraversalsStaircase() {}
 }
