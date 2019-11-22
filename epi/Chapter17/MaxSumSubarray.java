@@ -18,6 +18,16 @@ public final class MaxSumSubarray {
         return maxSum;
     }
 
+    @EpiTest(testDataFile = "max_sum_subarray.tsv")
+    public static int kadane(List<Integer> list) {
+        int curr = 0, res = 0;
+        for (int i : list) {
+            curr = Math.max(0, curr + i);
+            res = Math.max(res, curr);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         TestRunner.run(args);
     }
