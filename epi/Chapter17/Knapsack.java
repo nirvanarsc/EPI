@@ -17,6 +17,11 @@ public final class Knapsack {
             this.weight = weight;
             this.value = value;
         }
+
+        @Override
+        public String toString() {
+            return "weight: " + weight + " value: " + value;
+        }
     }
 
     @EpiTest(testDataFile = "knapsack.tsv")
