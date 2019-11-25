@@ -23,11 +23,10 @@ public final class MinimumSubsetSumDifference {
 
     public static int canPartitionBottomUp(int[] num) {
         int sum = 0;
-        for (int value : num) {
-            sum += value;
-        }
+        for (int value : num) { sum += value; }
 
-        final boolean[][] dp = new boolean[num.length][sum / 2 + 1];
+        final int targetSum = sum / 2;
+        final boolean[][] dp = new boolean[num.length][targetSum + 1];
 
         // populate the sum=0 columns, as we can always form '0' sum with an empty set
         for (int i = 0; i < num.length; i++) {
@@ -35,13 +34,13 @@ public final class MinimumSubsetSumDifference {
         }
 
         // with only one number, we can form a subset only when the required sum is equal to that number
-        for (int s = 1; s <= sum / 2; s++) {
+        for (int s = 1; s <= targetSum; s++) {
             dp[0][s] = num[0] == s;
         }
 
         // process all subsets for all sums
         for (int i = 1; i < num.length; i++) {
-            for (int s = 1; s <= sum / 2; s++) {
+            for (int s = 1; s <= targetSum; s++) {
                 // if we can get the sum 's' without the number at index 'i'
                 if (dp[i - 1][s]) {
                     dp[i][s] = dp[i - 1][s];
@@ -52,22 +51,20 @@ public final class MinimumSubsetSumDifference {
             }
         }
 
-        int sum1 = 0;
+        int largestIndexSum = 0;
         // Find the largest index in the last row which is true
-        for (int i = sum / 2; i >= 0; i--) {
+        for (int i = targetSum; i >= 0; i--) {
             if (dp[num.length - 1][i]) {
-                sum1 = i;
+                largestIndexSum = i;
                 break;
             }
         }
 
-        final int sum2 = sum - sum1;
-        return Math.abs(sum2 - sum1);
+        final int otherSum = sum - largestIndexSum;
+        return Math.abs(otherSum - largestIndexSum);
     }
 
     public static void main(String[] args) {
-        System.out.println(String.format("%4d%4d", canPartition(new int[] { 1, 2, 3, 9 }),
-                                         canPartitionBottomUp(new int[] { 1, 2, 3, 9 })));
         System.out.println(String.format("%4d%4d", canPartition(new int[] { 1, 2, 3, 9 }),
                                          canPartitionBottomUp(new int[] { 1, 2, 3, 9 })));
         System.out.println(String.format("%4d%4d", canPartition(new int[] { 1, 2, 7, 1, 5 }),
