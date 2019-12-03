@@ -6,7 +6,7 @@ import java.util.List;
 
 import epi.Chapter17.Knapsack.Item;
 
-public final class FractorialKnapsack {
+public final class FractionalKnapsack {
 
     public static void main(String[] args) {
         final List<Item> items = new ArrayList<>();
@@ -19,10 +19,10 @@ public final class FractorialKnapsack {
         items.add(new Item(2, 4));
 
         System.out.println(Knapsack.knapsackSpaceC(items, 6));
-        System.out.println(fractorialKnapsack(items, 6));
+        System.out.println(fractionalKnapsack(items, 6));
     }
 
-    public static double fractorialKnapsack(List<Item> items, double capacity) {
+    public static double fractionalKnapsack(List<Item> items, double capacity) {
         items.sort(Comparator.comparingDouble(a -> (double) a.weight / a.value));
         double res = 0;
         for (Item i : items) {
@@ -38,5 +38,5 @@ public final class FractorialKnapsack {
         return res;
     }
 
-    private FractorialKnapsack() {}
+    private FractionalKnapsack() {}
 }
