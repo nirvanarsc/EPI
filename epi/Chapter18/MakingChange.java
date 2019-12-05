@@ -8,7 +8,6 @@ public final class MakingChange {
         for (int coin : COINS) {
             numCoins += cents / coin;
             cents %= coin;
-
         }
 
         return numCoins;
