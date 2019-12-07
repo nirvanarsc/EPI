@@ -62,8 +62,8 @@ public final class SearchMaze {
         }
 
         maze.get(s.x).set(s.y, Color.BLACK);
-        for (int[] shift : new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }) {
-            final Coordinate next = new Coordinate(s.x + shift[0], s.y + shift[1]);
+        for (int[] dir : new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }) {
+            final Coordinate next = new Coordinate(s.x + dir[0], s.y + dir[1]);
             path.add(next);
             if (search(maze, next, e, path)) {
                 return true;
