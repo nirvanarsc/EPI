@@ -8,11 +8,8 @@ public final class SortedListsMerge {
 
     @EpiTest(testDataFile = "sorted_lists_merge.tsv")
     public static ListNode<Integer> mergeTwoSortedLists(ListNode<Integer> l1, ListNode<Integer> l2) {
-        if (l1 == null) return l2;
-        if (l2 == null) return l1;
-
-        final ListNode<Integer> head = new ListNode<>(0, null);
-        ListNode<Integer> curr = head;
+        final ListNode<Integer> dummy = new ListNode<>(0, null);
+        ListNode<Integer> curr = dummy;
 
         while (l1 != null && l2 != null) {
             if (l1.data < l2.data) {
@@ -27,7 +24,7 @@ public final class SortedListsMerge {
 
         curr.next = l1 != null ? l1 : l2;
 
-        return head.next;
+        return dummy.next;
     }
 
     public static void main(String[] args) {

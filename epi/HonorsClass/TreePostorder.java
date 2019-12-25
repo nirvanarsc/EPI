@@ -1,4 +1,4 @@
-package epi.Chapter10;
+package epi.HonorsClass;
 
 import epi.BinaryTreeNode;
 import epi.test_framework.EpiTest;
