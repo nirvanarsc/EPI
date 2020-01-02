@@ -31,12 +31,8 @@ public final class CalendarRendering {
         }
 
         @Override
-        public int compareTo(Endpoint o) {
-            if (time == o.time && isStart && !o.isStart) {
-                return -1;
-            }
-
-            return Integer.compare(time, o.time);
+        public int compareTo(Endpoint e) {
+            return time != e.time ? Integer.compare(time, e.time) : Boolean.compare(e.isStart, isStart);
         }
 
         @Override
