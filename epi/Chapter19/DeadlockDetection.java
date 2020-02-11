@@ -1,18 +1,19 @@
-package epi;
+package epi.Chapter19;
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
 import java.util.ArrayList;
 import java.util.List;
-public class IsCircuitWirable {
+public class DeadlockDetection {
 
   public static class GraphVertex {
-    public int d = -1;
-    public List<GraphVertex> edges = new ArrayList<>();
+    public List<GraphVertex> edges;
+
+    public GraphVertex() { edges = new ArrayList<>(); }
   }
 
-  public static boolean isAnyPlacementFeasible(List<GraphVertex> graph) {
+  public static boolean isDeadlocked(List<GraphVertex> graph) {
     // TODO - you fill in here.
     return true;
   }
@@ -27,28 +28,31 @@ public class IsCircuitWirable {
     }
   }
 
-  @EpiTest(testDataFile = "is_circuit_wirable.tsv")
-  public static boolean isAnyPlacementFeasibleWrapper(TimedExecutor executor,
-                                                      int k, List<Edge> edges)
+  @EpiTest(testDataFile = "deadlock_detection.tsv")
+  public static boolean isDeadlockedWrapper(TimedExecutor executor,
+                                            int numNodes, List<Edge> edges)
       throws Exception {
-    if (k <= 0)
-      throw new RuntimeException("Invalid k value");
+    if (numNodes <= 0) {
+      throw new RuntimeException("Invalid numNodes value");
+    }
     List<GraphVertex> graph = new ArrayList<>();
-    for (int i = 0; i < k; i++)
+    for (int i = 0; i < numNodes; i++) {
       graph.add(new GraphVertex());
+    }
     for (Edge e : edges) {
-      if (e.from < 0 || e.from >= k || e.to < 0 || e.to >= k)
+      if (e.from < 0 || e.from >= numNodes || e.to < 0 || e.to >= numNodes) {
         throw new RuntimeException("Invalid vertex index");
+      }
       graph.get(e.from).edges.add(graph.get(e.to));
     }
 
-    return executor.run(() -> isAnyPlacementFeasible(graph));
+    return executor.run(() -> isDeadlocked(graph));
   }
 
   public static void main(String[] args) {
     System.exit(
         GenericTest
-            .runFromAnnotations(args, "IsCircuitWirable.java",
+            .runFromAnnotations(args, "DeadlockDetection.java",
                                 new Object() {}.getClass().getEnclosingClass())
             .ordinal());
   }
