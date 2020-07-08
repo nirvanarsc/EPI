@@ -8,11 +8,9 @@ public final class ClosestIntSameWeight {
     @EpiTest(testDataFile = "closest_int_same_weight.tsv")
     public static long closestIntSameBitCount(long x) {
         int i = 0;
-
         while (isBitSet(x, i) == isBitSet(x, i + 1)) {
             i++;
         }
-
         return SwapBits.swapBits(x, i + 1, i);
     }
 

@@ -1,26 +1,23 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class PowerXY {
 
+    @SuppressWarnings("TailRecursion")
     @EpiTest(testDataFile = "power_x_y.tsv")
     public static double power(double x, int y) {
         if (y < 0) {
-            y = -y;
-            x = 1.0 / x;
+            return 1.0 / power(x, -y);
         }
-        short idx = 0;
-        double res = 1;
-        while (idx < Integer.SIZE) {
-            if (((y >> idx) & 1) == 1) {
-                res *= x;
-            }
-            x *= x;
-            idx++;
+        if (y == 0) {
+            return 1;
         }
-        return res;
+        if ((y & 1) == 1) {
+            return x * power(x, y - 1);
+        }
+        return power(x * x, y >> 1);
     }
 
     public static void main(String[] args) {

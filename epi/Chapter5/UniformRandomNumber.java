@@ -21,16 +21,14 @@ public final class UniformRandomNumber {
 
     public static int uniformRandom(int lowerBound, int upperBound) {
         final int limit = upperBound - lowerBound;
-
-        while (true) {
-            int res = 0;
+        int res;
+        do {
+            res = 0;
             for (int i = 0; (1 << i) <= limit; i++) {
                 res |= zeroOneRandom() << i;
             }
-            if (res <= limit) {
-                return lowerBound + res;
-            }
-        }
+        } while (res > limit);
+        return lowerBound + res;
     }
 
     private static boolean uniformRandomRunner(TimedExecutor executor,

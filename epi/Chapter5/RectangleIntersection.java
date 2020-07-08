@@ -1,12 +1,12 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
+import epi.utils.TestRunner;
 
 public final class RectangleIntersection {
 
-    @EpiUserType(ctorParams = {int.class, int.class, int.class, int.class})
+    @EpiUserType(ctorParams = { int.class, int.class, int.class, int.class })
     public static class Rectangle {
         int x, y, width, height;
 
@@ -70,9 +70,9 @@ public final class RectangleIntersection {
 
     private static boolean intersects(Rectangle r1, Rectangle r2) {
         return r1.x <= r2.x + r2.width
-                && r1.x + r1.width >= r2.x
-                && r1.y <= r2.y + r2.height
-                && r1.y + r1.height >= r2.y;
+               && r2.x <= r1.x + r1.width
+               && r1.y <= r2.y + r2.height
+               && r2.y <= r1.y + r1.height;
     }
 
     public static void main(String[] args) {

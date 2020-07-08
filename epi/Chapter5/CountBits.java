@@ -1,18 +1,18 @@
 package epi.Chapter5;
 
-import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class CountBits {
 
     @EpiTest(testDataFile = "count_bits.tsv")
     public static short countBits(int x) {
-        short numBits = 0;
-        while (x != 0) {
-            numBits += x & 1;
-            x >>>= 1;
+        short res = 0;
+        while (x > 0) {
+            x &= x - 1;
+            res++;
         }
-        return numBits;
+        return res;
     }
 
     public static void main(String[] args) {
