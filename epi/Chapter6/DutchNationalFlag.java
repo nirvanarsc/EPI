@@ -1,49 +1,41 @@
 package epi.Chapter6;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-import epi.test_framework.TestFailure;
-import epi.test_framework.TimedExecutor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import epi.test_framework.EpiTest;
+import epi.test_framework.TestFailure;
+import epi.test_framework.TimedExecutor;
+import epi.utils.TestRunner;
+
+@SuppressWarnings("MethodParameterNamingConvention")
 public final class DutchNationalFlag {
 
     public enum Color {RED, WHITE, BLUE}
 
-    public static void dutchFlagPartition(int pivotIndex, List<Color> a) {
-        final Color pivot = a.get(pivotIndex);
-        int begin = 0, mid = a.size() - 1, end = a.size() - 1;
-        while (begin <= mid) {
-            if (a.get(begin).compareTo(pivot) < 0) {
-                begin++;
-            } else if (a.get(begin).compareTo(pivot) == 0) {
-                Collections.swap(a, begin, mid--);
+    public static void dutchFlagPartition(int pivotIndex, List<Color> A) {
+        int lo = 0;
+        int mid = 0;
+        int hi = A.size() - 1;
+        final Color p = A.get(pivotIndex);
+        while (mid <= hi) {
+            if (A.get(mid).compareTo(p) < 0) {
+                Collections.swap(A, lo, mid);
+                lo++;
+                mid++;
+            } else if (A.get(mid).compareTo(p) == 0) {
+                mid++;
             } else {
-                Collections.swap(a, begin, end--);
+                Collections.swap(A, mid, hi);
+                hi--;
             }
-            mid = Math.min(mid, end);
         }
     }
 
-//    public static void dutchFlagPartition(int pivotIndex, List<Color> a) {
-//        final Color pivot = a.get(pivotIndex);
-//        int begin = 0, mid = 0, end = a.size() - 1;
-//        while (mid <= end) {
-//            if (a.get(mid).compareTo(pivot) < 0) {
-//                Collections.swap(a, begin++, mid++);
-//            } else if (a.get(mid).compareTo(pivot) == 0) {
-//                mid++;
-//            } else {
-//                Collections.swap(a, mid, end--);
-//            }
-//        }
-//    }
-
     @EpiTest(testDataFile = "dutch_national_flag.tsv")
-    public static void dutchFlagPartitionWrapper(TimedExecutor executor, List<Integer> a, int pivotIdx) throws Exception {
+    public static void dutchFlagPartitionWrapper(TimedExecutor executor, List<Integer> a, int pivotIdx)
+            throws Exception {
         final List<Color> colors = new ArrayList<>();
         final int[] count = new int[3];
 
@@ -84,6 +76,5 @@ public final class DutchNationalFlag {
         TestRunner.run(args);
     }
 
-    private DutchNationalFlag() {
-    }
+    private DutchNationalFlag() {}
 }

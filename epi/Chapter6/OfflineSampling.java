@@ -51,6 +51,5 @@ public final class OfflineSampling {
         TestRunner.run(args);
     }
 
-    private OfflineSampling() {
-    }
+    private OfflineSampling() {}
 }

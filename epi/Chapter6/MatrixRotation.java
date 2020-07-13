@@ -42,18 +42,18 @@ public final class MatrixRotation {
     }
 
     public static void rotateMatrix(List<List<Integer>> squareMatrix) {
-        final int i = squareMatrix.size() - 1;
+        final int n = squareMatrix.size();
 
-        for (int layer = 0; layer < squareMatrix.size() / 2; layer++) {
-            for (int k = layer; k < i - layer; k++) {
-                final int topLeft = squareMatrix.get(layer).get(k);
-                final int topRight = squareMatrix.get(k).get(i - layer);
-                final int botRight = squareMatrix.get(i - layer).get(i - k);
-                final int botLeft = squareMatrix.get(i - k).get(layer);
-                squareMatrix.get(layer).set(k, botLeft);
-                squareMatrix.get(k).set(i - layer, topLeft);
-                squareMatrix.get(i - layer).set(i - k, topRight);
-                squareMatrix.get(i - k).set(layer, botRight);
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = i; j < n - 1 - i; j++) {
+                final int p = squareMatrix.get(i).get(j);
+                final int q = squareMatrix.get(j).get(n - 1 - i);
+                final int r = squareMatrix.get(n - 1 - i).get(n - 1 - j);
+                final int s = squareMatrix.get(n - 1 - j).get(i);
+                squareMatrix.get(i).set(j, s);
+                squareMatrix.get(j).set(n - 1 - i, p);
+                squareMatrix.get(n - 1 - i).set(n - 1 - j, q);
+                squareMatrix.get(n - 1 - j).set(i, r);
             }
         }
     }
@@ -69,6 +69,5 @@ public final class MatrixRotation {
         TestRunner.run(args);
     }
 
-    private MatrixRotation() {
-    }
+    private MatrixRotation() {}
 }

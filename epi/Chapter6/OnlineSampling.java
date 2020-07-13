@@ -16,18 +16,16 @@ public final class OnlineSampling {
 
     // Assumption: there are at least k elements in the stream.
     public static List<Integer> onlineRandomSample(Iterator<Integer> stream, int k) {
-        final List<Integer> res = new ArrayList<>();
         final Random r = new Random();
-        int i = 0;
-        while (stream.hasNext()) {
-            i++;
-            final int next = stream.next();
-            if (res.size() < k) {
-                res.add(next);
+        final List<Integer> res = new ArrayList<>();
+        for (int i = 1; stream.hasNext(); i++) {
+            final int curr = stream.next();
+            if (i <= k) {
+                res.add(curr);
             } else {
-                final int randomIdx = r.nextInt(i);
-                if (randomIdx < k) {
-                    res.set(randomIdx, next);
+                final int swapIdx = r.nextInt(i);
+                if (swapIdx < k) {
+                    res.set(swapIdx, curr);
                 }
             }
         }
@@ -55,6 +53,5 @@ public final class OnlineSampling {
         TestRunner.run(args);
     }
 
-    private OnlineSampling() {
-    }
+    private OnlineSampling() {}
 }

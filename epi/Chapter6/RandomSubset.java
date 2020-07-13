@@ -1,8 +1,8 @@
 package epi.Chapter6;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-import epi.test_framework.TimedExecutor;
+import static epi.test_framework.RandomSequenceChecker.binomialCoefficient;
+import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
+import static epi.utils.RandomSampleUtils.computeHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static epi.test_framework.RandomSequenceChecker.binomialCoefficient;
-import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
-import static epi.utils.RandomSampleUtils.computeHelper;
+import epi.test_framework.EpiTest;
+import epi.test_framework.TimedExecutor;
+import epi.utils.TestRunner;
 
 public final class RandomSubset {
 
@@ -23,21 +23,10 @@ public final class RandomSubset {
 
         for (int i = 0; i < k; i++) {
             final int randomIdx = i + random.nextInt(n - i);
-            final Integer ptr1 = changedElements.get(randomIdx);
-            final Integer ptr2 = changedElements.get(i);
-            if (ptr1 == null && ptr2 == null) {
-                changedElements.put(randomIdx, i);
-                changedElements.put(i, randomIdx);
-            } else if (ptr1 == null) {
-                changedElements.put(randomIdx, ptr2);
-                changedElements.put(i, randomIdx);
-            } else if (ptr2 == null) {
-                changedElements.put(i, ptr1);
-                changedElements.put(randomIdx, i);
-            } else {
-                changedElements.put(i, ptr1);
-                changedElements.put(randomIdx, ptr2);
-            }
+            final Integer ptr1 = changedElements.getOrDefault(randomIdx, randomIdx);
+            final Integer ptr2 = changedElements.getOrDefault(i, i);
+            changedElements.put(randomIdx, ptr2);
+            changedElements.put(i, ptr1);
         }
 
         final List<Integer> result = new ArrayList<>();
@@ -82,6 +71,5 @@ public final class RandomSubset {
         TestRunner.run(args);
     }
 
-    private RandomSubset() {
-    }
+    private RandomSubset() {}
 }

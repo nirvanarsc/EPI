@@ -1,51 +1,56 @@
 package epi.Chapter6;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-import epi.test_framework.TimedExecutor;
+import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
+import epi.test_framework.EpiTest;
+import epi.test_framework.TimedExecutor;
+import epi.utils.TestRunner;
 
 public final class NonuniformRandomNumber {
 
-    public static int nonuniformRandomNumberGeneration(List<Integer> values, List<Double> probabilities) {
-        final Random r = new Random();
-        final double v = r.nextDouble();
-        double curr = 0;
-
-        for (int i = 0; i < values.size(); i++) {
-            curr += probabilities.get(i);
-            if (v <= curr) {
-                return values.get(i);
-            }
-        }
-
-        return -1;
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(nums, 0, res, new ArrayList<>());
+        return res;
     }
 
-//    public static int nonuniformRandomNumberGeneration(List<Integer> values, List<Double> probabilities) {
-//        final List<Double> sum = new ArrayList<>();
-//        sum.add(0.0);
-//        for (double d : probabilities) {
-//            sum.add(sum.get(sum.size() - 1) + d);
-//        }
-//        final Random r = new Random();
-//        final double v = r.nextDouble();
-//
-//        final int it = Collections.binarySearch(sum, v);
-//        if (it < 0) {
-//            final int intervalIdx = Math.abs(it) - 2;
-//            return values.get(intervalIdx);
-//        } else {
-//            return values.get(it);
-//        }
-//    }
+    private static void dfs(int[] nums, int i, List<List<Integer>> res, List<Integer> curr) {
+        res.add(new ArrayList<>(curr));
+        for (int j = i; j < nums.length; j++) {
+            curr.add(nums[j]);
+            dfs(nums, j + 1, res, curr);
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public static int nonuniformRandomNumberGeneration(List<Integer> values,
+                                                       List<Double> probabilities) {
+        final double[] prefixSum = new double[probabilities.size()];
+        for (int i = 0; i < probabilities.size(); i++) {
+            prefixSum[i] = probabilities.get(i) + (i > 0 ? prefixSum[i - 1] : 0);
+        }
+        final double random = Math.random();
+        return values.get(lowerBound(prefixSum, random));
+    }
+
+    private static int lowerBound(double[] arr, double target) {
+        int lo = 0;
+        int hi = arr.length - 1;
+        while (lo < hi) {
+            final int mid = lo + hi >>> 1;
+            if (arr[mid] < target) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        return lo;
+    }
 
     private static boolean nonuniformRandomNumberGenerationRunner(TimedExecutor executor,
                                                                   List<Integer> values,
@@ -88,6 +93,5 @@ public final class NonuniformRandomNumber {
         TestRunner.run(args);
     }
 
-    private NonuniformRandomNumber() {
-    }
+    private NonuniformRandomNumber() {}
 }

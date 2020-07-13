@@ -9,18 +9,16 @@ public final class AdvanceByOffsets {
 
     @EpiTest(testDataFile = "advance_by_offsets.tsv")
     public static boolean canReachEnd(List<Integer> maxAdvanceSteps) {
-        int furthestReach = 0;
-        for (int i = 0; i < maxAdvanceSteps.size() && i <= furthestReach; i++) {
-            furthestReach = Math.max(maxAdvanceSteps.get(i) + i, furthestReach);
+        int currMax = 0;
+        for (int j = 0; j < maxAdvanceSteps.size() && j <= currMax; j++) {
+            currMax = Math.max(currMax, j + maxAdvanceSteps.get(j));
         }
-
-        return furthestReach >= maxAdvanceSteps.size() - 1;
+        return currMax >= maxAdvanceSteps.size() - 1;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private AdvanceByOffsets() {
-    }
+    private AdvanceByOffsets() {}
 }

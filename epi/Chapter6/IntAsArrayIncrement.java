@@ -5,28 +5,28 @@ import epi.test_framework.EpiTest;
 
 import java.util.List;
 
+@SuppressWarnings("MethodParameterNamingConvention")
 public final class IntAsArrayIncrement {
 
     @EpiTest(testDataFile = "int_as_array_increment.tsv")
-    public static List<Integer> plusOne(List<Integer> a) {
-        int end = a.size() - 1;
-        while (end >= 0 && a.get(end) == 9) {
-            a.set(end, 0);
-            end--;
+    public static List<Integer> plusOne(List<Integer> A) {
+        int carry = 1;
+        int idx = A.size() - 1;
+        while (idx >= 0) {
+            final int inc = A.get(idx) + carry;
+            carry = inc / 10;
+            A.set(idx, inc % 10);
+            idx--;
         }
-        if (end == -1) {
-            a.add(0, 1);
-        } else {
-            a.set(end, a.get(end) + 1);
+        if (carry > 0) {
+            A.add(0, 1);
         }
-
-        return a;
+        return A;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private IntAsArrayIncrement() {
-    }
+    private IntAsArrayIncrement() {}
 }

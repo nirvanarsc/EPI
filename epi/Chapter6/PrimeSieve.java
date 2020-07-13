@@ -4,6 +4,7 @@ import epi.utils.TestRunner;
 import epi.test_framework.EpiTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,15 +13,18 @@ public final class PrimeSieve {
     @EpiTest(testDataFile = "prime_sieve.tsv")
     public static List<Integer> generatePrimes(int n) {
         final List<Integer> res = new ArrayList<>();
-        final List<Boolean> isPrime = new ArrayList<>(Collections.nCopies(n + 1, true));
-        isPrime.set(0, false);
-        isPrime.set(1, false);
-        for (int p = 2; p <= n; p++) {
-            if (isPrime.get(p)) {
-                res.add(p);
+        final boolean[] sieve = new boolean[n + 1];
+        Arrays.fill(sieve, true);
+        for (int p = 2; p * p <= n; p++) {
+            if (sieve[p]) {
+                for (int k = 2 * p; k <= n; k += p) {
+                    sieve[k] = false;
+                }
             }
-            for (int i = p; i <= n; i += p) {
-                isPrime.set(i, false);
+        }
+        for (int p = 2; p < sieve.length; p++) {
+            if (sieve[p]) {
+                res.add(p);
             }
         }
         return res;
@@ -50,6 +54,5 @@ public final class PrimeSieve {
         TestRunner.run(args);
     }
 
-    private PrimeSieve() {
-    }
+    private PrimeSieve() {}
 }

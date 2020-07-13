@@ -1,40 +1,29 @@
 package epi.Chapter6;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-import epi.test_framework.TimedExecutor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static epi.test_framework.RandomSequenceChecker.checkSequenceIsUniformlyRandom;
 import static epi.test_framework.RandomSequenceChecker.runFuncWithRetries;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import epi.test_framework.EpiTest;
+import epi.test_framework.TimedExecutor;
+import epi.utils.TestRunner;
 
 public final class RandomPermutation {
 
     public static List<Integer> computeRandomPermutation(int n) {
-        final List<Integer> res = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            res.add(i);
+        final List<Integer> list = IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList());
+        final Random r = new Random();
+        for (int i = 0; i < list.size(); i++) {
+            Collections.swap(list, i, i + r.nextInt(list.size() - i));
         }
-        OfflineSampling.randomSampling(res.size(), res);
-        return res;
+        return list;
     }
-
-//    public static List<Integer> computeRandomPermutation(int n) {
-//        final Random r = new Random();
-//        final List<Integer> set = new ArrayList<>();
-//        final List<Integer> res = new ArrayList<>();
-//        for (int i = 0; i < n; i++) {
-//            set.add(i);
-//        }
-//        while (!set.isEmpty()) {
-//            final int randomIdx = r.nextInt(set.size());
-//            res.add(set.get(randomIdx));
-//            set.remove(randomIdx);
-//        }
-//        return res;
-//    }
 
     private static int factorial(int n) {
         return n <= 1 ? 1 : n * factorial(n - 1);
@@ -81,6 +70,5 @@ public final class RandomPermutation {
         TestRunner.run(args);
     }
 
-    private RandomPermutation() {
-    }
+    private RandomPermutation() {}
 }

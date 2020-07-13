@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "InstantiationOfUtilityClass", "UtilityClassWithoutPrivateConstructor" })
 public final class EvenOddArray {
 
     public static void evenOdd(List<Integer> a) {

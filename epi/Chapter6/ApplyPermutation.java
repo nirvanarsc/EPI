@@ -1,20 +1,21 @@
 package epi.Chapter6;
 
-import epi.utils.TestRunner;
-import epi.test_framework.EpiTest;
-
 import java.util.Collections;
 import java.util.List;
 
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
+
+@SuppressWarnings("MethodParameterNamingConvention")
 public final class ApplyPermutation {
 
-    public static void applyPermutation(List<Integer> perm, List<Integer> a) {
+    public static void applyPermutation(List<Integer> perm, List<Integer> A) {
         for (int i = 0; i < perm.size(); i++) {
             int next = i;
             while (perm.get(next) >= 0) {
                 final int temp = perm.get(next);
-                Collections.swap(a, i, temp);
-                perm.set(next, temp - perm.size());
+                Collections.swap(A, i, temp);
+                perm.set(next, -1);
                 next = temp;
             }
         }
@@ -30,6 +31,5 @@ public final class ApplyPermutation {
         TestRunner.run(args);
     }
 
-    private ApplyPermutation() {
-    }
+    private ApplyPermutation() {}
 }

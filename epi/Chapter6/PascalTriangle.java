@@ -11,28 +11,26 @@ public final class PascalTriangle {
 
     @EpiTest(testDataFile = "pascal_triangle.tsv")
     public static List<List<Integer>> generatePascalTriangle(int numRows) {
-        final List<List<Integer>> pascal = new ArrayList<>();
-        for (int i = 0; i < numRows; i++) {
-            if (i == 0) {
-                pascal.add(Collections.nCopies(1, 1));
-            } else {
-                final List<Integer> prevRow = pascal.get(i - 1);
-                final List<Integer> newRow = new ArrayList<>();
-                newRow.add(1);
-                for (int n = 1; n < prevRow.size(); n++) {
-                    newRow.add(prevRow.get(n - 1) + prevRow.get(n));
-                }
-                newRow.add(1);
-                pascal.add(newRow);
-            }
+        final List<List<Integer>> res = new ArrayList<>();
+        if (numRows == 0) {
+            return res;
         }
-        return pascal;
+        res.add(Collections.singletonList(1));
+        for (int i = 1; i < numRows; i++) {
+            final List<Integer> row = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                final int prevL = j > 0 ? res.get(i - 1).get(j - 1) : 0;
+                final int prevU = j < res.get(i - 1).size() ? res.get(i - 1).get(j) : 0;
+                row.add(prevL + prevU);
+            }
+            res.add(row);
+        }
+        return res;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private PascalTriangle() {
-    }
+    private PascalTriangle() {}
 }
