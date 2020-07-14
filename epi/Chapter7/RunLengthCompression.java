@@ -8,25 +8,33 @@ public final class RunLengthCompression {
 
     public static String decoding(String s) {
         final StringBuilder sb = new StringBuilder();
-        int start = 0, end = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (Character.isDigit(s.charAt(i))) {
-                end++;
-            } else {
-                int n = Integer.parseInt(s.substring(start, end));
-                while (n-- > 0) {
-                    sb.append(s.charAt(i));
-                }
-                start = i + 1;
-                end = i + 1;
+            int count = 0;
+            int j = i;
+            while (j < s.length() && Character.isDigit(s.charAt(j))) {
+                count = count * 10 + s.charAt(j) - '0';
+                j++;
             }
+            for (int k = 0; k < count; k++) {
+                sb.append(s.charAt(j));
+            }
+            i = j;
         }
-
         return sb.toString();
     }
 
     public static String encoding(String s) {
-        return LookAndSay.lookAndSay(s);
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            int j = i;
+            while (j < s.length() && s.charAt(j) == s.charAt(i)) {
+                j++;
+            }
+            sb.append(j - i);
+            sb.append(s.charAt(i));
+            i = j - 1;
+        }
+        return sb.toString();
     }
 
     @EpiTest(testDataFile = "run_length_compression.tsv")
@@ -43,6 +51,5 @@ public final class RunLengthCompression {
         TestRunner.run(args);
     }
 
-    private RunLengthCompression() {
-    }
+    private RunLengthCompression() {}
 }

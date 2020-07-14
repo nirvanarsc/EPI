@@ -29,6 +29,5 @@ public final class IsStringPalindromicPunctuation {
         TestRunner.run(args);
     }
 
-    private IsStringPalindromicPunctuation() {
-    }
+    private IsStringPalindromicPunctuation() {}
 }

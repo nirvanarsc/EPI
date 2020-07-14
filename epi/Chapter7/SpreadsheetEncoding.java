@@ -9,7 +9,7 @@ public final class SpreadsheetEncoding {
     public static int ssDecodeColID(String col) {
         int res = 0;
         for (char c : col.toCharArray()) {
-            res = res * 26 + c - '@';
+            res = res * 26 + c - 'A' + 1;
         }
         return res;
     }
@@ -18,6 +18,5 @@ public final class SpreadsheetEncoding {
         TestRunner.run(args);
     }
 
-    private SpreadsheetEncoding() {
-    }
+    private SpreadsheetEncoding() {}
 }

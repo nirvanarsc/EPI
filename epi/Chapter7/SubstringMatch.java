@@ -7,27 +7,41 @@ public final class SubstringMatch {
 
     @EpiTest(testDataFile = "substring_match.tsv")
     public static int substringMatch(String t, String s) {
-        return t.indexOf(s);
-    }
-
-    @EpiTest(testDataFile = "substring_match.tsv")
-    public static int substringMatch2(String t, String s) {
         if (s.isEmpty()) {
             return 0;
         }
-        for (int i = 0; i < t.length(); i++) {
-            if (t.charAt(i) == s.charAt(0)) {
-                final int end = i + s.length();
-                if (end <= t.length() && t.substring(i, end).equals(s)) {
-                    return i;
-                }
+        final int[] prefixSuffix = kmp(s);
+        for (int i = 0, j = 0; i < t.length() && j < s.length(); i++) {
+            while (j > 0 && t.charAt(i) != s.charAt(j)) {
+                j = prefixSuffix[j - 1];
+            }
+            if (t.charAt(i) == s.charAt(j)) {
+                j++;
+            }
+            if (j == s.length()) {
+                return i - j + 1;
             }
         }
         return -1;
     }
 
+    private static int[] kmp(String s) {
+        final int n = s.length();
+        final int[] prefixSuffix = new int[n];
+        for (int i = 1, j = 0; i < s.length(); i++) {
+            while (j > 0 && s.charAt(i) != s.charAt(j)) {
+                j = prefixSuffix[j - 1];
+            }
+            if (s.charAt(i) == s.charAt(j)) {
+                j++;
+            }
+            prefixSuffix[i] = j;
+        }
+        return prefixSuffix;
+    }
+
     @EpiTest(testDataFile = "substring_match.tsv")
-    public static int rabinKarp3(String t, String s) {
+    public static int substringMatchRabinKarp(String t, String s) {
         if (s.length() > t.length()) {
             return -1;
         }
@@ -42,7 +56,7 @@ public final class SubstringMatch {
         }
 
         for (int i = s.length(); i < t.length(); i++) {
-            if (tHash == sHash && t.substring(i - s.length(), i).equals(s)) {
+            if (tHash == sHash && t.startsWith(s, i - s.length())) {
                 return i - s.length();
             }
 
@@ -50,7 +64,7 @@ public final class SubstringMatch {
             tHash = tHash * BASE + t.charAt(i);
         }
 
-        if (tHash == sHash && t.substring(t.length() - s.length()).equals(s)) {
+        if (tHash == sHash && t.endsWith(s)) {
             return t.length() - s.length();
         }
 
@@ -61,6 +75,5 @@ public final class SubstringMatch {
         TestRunner.run(args);
     }
 
-    private SubstringMatch() {
-    }
+    private SubstringMatch() {}
 }

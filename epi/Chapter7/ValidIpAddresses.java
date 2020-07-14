@@ -12,38 +12,32 @@ public final class ValidIpAddresses {
 
     @EpiTest(testDataFile = "valid_ip_addresses.tsv")
     public static List<String> getValidIpAddress(String s) {
-        final List<String> result = new ArrayList<>();
-        for (int i = 1; i < 4 && i < s.length(); i++) {
-            final String first = s.substring(0, i);
-            if (isValidPart(first)) {
-                for (int j = 1; i + j < s.length() && j < 4; j++) {
-                    final String second = s.substring(i, i + j);
-                    if (isValidPart(second)) {
-                        for (int k = 1; i + j + k < s.length() && k < 4; k++) {
-                            final String third = s.substring(i + j, i + j + k);
-                            final String fourth = s.substring(i + j + k);
-                            if (isValidPart(third) && isValidPart(fourth)) {
-                                result.add(first + '.' + second + '.' + third + '.' + fourth);
-                            }
-                        }
+        final int len = s.length();
+        final List<String> res = new ArrayList<>();
+        for (int i = 1; i <= Math.min(len, 3); i++) {
+            final String m = s.substring(0, i);
+            if (!check(m)) { continue; }
+            for (int j = i + 1; j <= Math.min(len, i + 4); j++) {
+                final String n = s.substring(i, j);
+                if (!check(n)) { continue; }
+                for (int k = j + 1; k < Math.min(len, j + 4); k++) {
+                    final String o = s.substring(j, k);
+                    final String p = s.substring(k);
+                    if (check(o) && check(p)) {
+                        res.add(m + '.' + n + '.' + o + '.' + p);
                     }
                 }
             }
         }
-        return result;
+        return res;
     }
 
-    private static boolean isValidPart(String s) {
-        if (s.length() > 3) {
+    private static boolean check(String num) {
+        if (num.length() > 3 || num.charAt(0) == '0' && num.length() > 1) {
             return false;
         }
-
-        if (s.charAt(0) == '0' && s.length() > 1) {
-            return false;
-        }
-
-        final int val = Integer.parseInt(s);
-        return 0 <= val && val <= 255;
+        final int address = Integer.parseInt(num);
+        return 0 <= address && address <= 255;
     }
 
     @EpiTestComparator
@@ -53,6 +47,5 @@ public final class ValidIpAddresses {
         TestRunner.run(args);
     }
 
-    private ValidIpAddresses() {
-    }
+    private ValidIpAddresses() {}
 }

@@ -24,6 +24,5 @@ public final class SnakeString {
         TestRunner.run(args);
     }
 
-    private SnakeString() {
-    }
+    private SnakeString() {}
 }

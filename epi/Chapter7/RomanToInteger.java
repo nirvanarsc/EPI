@@ -1,10 +1,10 @@
 package epi.Chapter7;
 
-import epi.test_framework.EpiTest;
-import epi.utils.TestRunner;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class RomanToInteger {
 
@@ -24,12 +24,10 @@ public final class RomanToInteger {
     public static int romanToInteger(String s) {
         int res = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (i == s.length() - 1) {
+            if (i == s.length() - 1 || ROMAN_NUMERALS.get(s.charAt(i + 1)) <= ROMAN_NUMERALS.get(s.charAt(i))) {
                 res += ROMAN_NUMERALS.get(s.charAt(i));
-            } else if (ROMAN_NUMERALS.get(s.charAt(i + 1)) > ROMAN_NUMERALS.get(s.charAt(i))) {
-                res -= ROMAN_NUMERALS.get(s.charAt(i));
             } else {
-                res += ROMAN_NUMERALS.get(s.charAt(i));
+                res -= ROMAN_NUMERALS.get(s.charAt(i));
             }
         }
         return res;
@@ -39,6 +37,5 @@ public final class RomanToInteger {
         TestRunner.run(args);
     }
 
-    private RomanToInteger() {
-    }
+    private RomanToInteger() {}
 }

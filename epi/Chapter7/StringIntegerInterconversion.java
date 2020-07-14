@@ -47,6 +47,5 @@ public final class StringIntegerInterconversion {
         TestRunner.run(args);
     }
 
-    private StringIntegerInterconversion() {
-    }
+    private StringIntegerInterconversion() {}
 }
