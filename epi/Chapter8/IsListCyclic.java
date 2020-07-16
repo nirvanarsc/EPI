@@ -6,28 +6,34 @@ import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
 import epi.utils.TestRunner;
 
+@SuppressWarnings("ReturnOfNull")
 public final class IsListCyclic {
 
     public static ListNode<Integer> hasCycle(ListNode<Integer> head) {
-        ListNode<Integer> slow = head, fast = head;
-
-        while (fast != null && fast.next != null) {
+        if (head == null) {
+            return null;
+        }
+        ListNode<Integer> slow = head;
+        ListNode<Integer> fast = head;
+        do {
             slow = slow.next;
             fast = fast.next.next;
-            if (slow == fast) {
-                while (slow != head) {
-                    slow = slow.next;
-                    head = head.next;
-                }
-                return head;
-            }
-        }
+        } while (slow != fast && fast != null && fast.next != null);
 
+        if (slow == fast) {
+            slow = head;
+            do {
+                slow = slow.next;
+                fast = fast.next;
+            } while (slow != fast);
+            return slow;
+        }
         return null;
     }
 
     @EpiTest(testDataFile = "is_list_cyclic.tsv")
-    public static void HasCycleWrapper(TimedExecutor executor, ListNode<Integer> head, int cycleIdx) throws Exception {
+    public static void HasCycleWrapper(TimedExecutor executor, ListNode<Integer> head, int cycleIdx)
+            throws Exception {
         int cycleLength = 0;
         if (cycleIdx != -1) {
             if (head == null) {
@@ -69,12 +75,14 @@ public final class IsListCyclic {
                 cursor = cursor.next;
                 cycleLength--;
                 if (cursor == null || cycleLength < 0) {
-                    throw new TestFailure("Returned node does not belong to the cycle or is not the closest node to the head");
+                    throw new TestFailure(
+                            "Returned node does not belong to the cycle or is not the closest node to the head");
                 }
             } while (cursor != result);
 
             if (cycleLength != 0) {
-                throw new TestFailure("Returned node does not belong to the cycle or is not the closest node to the head");
+                throw new TestFailure(
+                        "Returned node does not belong to the cycle or is not the closest node to the head");
             }
         }
     }
@@ -83,6 +91,5 @@ public final class IsListCyclic {
         TestRunner.run(args);
     }
 
-    private IsListCyclic() {
-    }
+    private IsListCyclic() {}
 }
