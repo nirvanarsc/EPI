@@ -11,11 +11,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("ConstantConditions")
 public final class PivotList {
 
     public static ListNode<Integer> listPivoting(ListNode<Integer> l, int x) {
-        if (l == null) return null;
-
         final ListNode<Integer> smaller = new ListNode<>(0, null);
         final ListNode<Integer> equal = new ListNode<>(0, null);
         final ListNode<Integer> greater = new ListNode<>(0, null);
@@ -41,7 +40,8 @@ public final class PivotList {
     }
 
     @EpiTest(testDataFile = "pivot_list.tsv")
-    public static void listPivotingWrapper(TimedExecutor executor, ListNode<Integer> l, int x) throws Exception {
+    public static void listPivotingWrapper(TimedExecutor executor, ListNode<Integer> l, int x)
+            throws Exception {
         final List<Integer> original = l == null ? new ArrayList<>() : l.toArray();
         final ListNode<Integer> finalL = l;
         l = executor.run(() -> listPivoting(finalL, x));
@@ -52,15 +52,14 @@ public final class PivotList {
         for (Integer i : pivoted) {
             switch (mode) {
                 case -1:
-                    if (i == x) mode = 0;
-                    else if (i > x) mode = 1;
+                    if (i == x) { mode = 0; } else if (i > x) { mode = 1; }
                     break;
                 case 0:
-                    if (i < x) throw new TestFailure("List is not pivoted");
-                    if (i > x) mode = 1;
+                    if (i < x) { throw new TestFailure("List is not pivoted"); }
+                    if (i > x) { mode = 1; }
                     break;
                 case 1:
-                    if (i <= x) throw new TestFailure("List is not pivoted");
+                    if (i <= x) { throw new TestFailure("List is not pivoted"); }
             }
         }
 
@@ -75,6 +74,5 @@ public final class PivotList {
         TestRunner.run(args);
     }
 
-    private PivotList() {
-    }
+    private PivotList() {}
 }

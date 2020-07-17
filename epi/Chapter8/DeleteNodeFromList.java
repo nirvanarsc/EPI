@@ -38,6 +38,5 @@ public final class DeleteNodeFromList {
         TestRunner.run(args);
     }
 
-    private DeleteNodeFromList() {
-    }
+    private DeleteNodeFromList() {}
 }

@@ -23,6 +23,5 @@ public final class SearchInList {
         TestRunner.run(args);
     }
 
-    private SearchInList() {
-    }
+    private SearchInList() {}
 }

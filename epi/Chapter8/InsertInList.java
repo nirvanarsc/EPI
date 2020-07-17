@@ -36,6 +36,5 @@ public final class InsertInList {
         TestRunner.run(args);
     }
 
-    private InsertInList() {
-    }
+    private InsertInList() {}
 }

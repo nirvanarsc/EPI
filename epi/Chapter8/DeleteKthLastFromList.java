@@ -6,30 +6,27 @@ import epi.utils.TestRunner;
 
 public final class DeleteKthLastFromList {
 
+    @SuppressWarnings("MethodParameterNamingConvention")
     @EpiTest(testDataFile = "delete_kth_last_from_list.tsv")
-    public static ListNode<Integer> removeKthLast(ListNode<Integer> l, int k) {
-        final ListNode<Integer> dummyHead = new ListNode<>(0, l);
-        ListNode<Integer> first = dummyHead;
-        ListNode<Integer> second = dummyHead.next;
-
-        while (k-- > 0) {
-            second = second.next;
+    public static ListNode<Integer> removeKthLast(ListNode<Integer> L, int k) {
+        final ListNode<Integer> res = new ListNode<>(-1, L);
+        ListNode<Integer> prev = res;
+        ListNode<Integer> iter = L, deleteIter = L;
+        for (int i = 0; i < k; i++) {
+            iter = iter.next;
         }
-
-        while (second != null) {
-            first = first.next;
-            second = second.next;
+        while (iter != null) {
+            iter = iter.next;
+            deleteIter = deleteIter.next;
+            prev = prev.next;
         }
-
-        DeleteFromList.deleteNextNode(first);
-
-        return dummyHead.next;
+        prev.next = prev.next.next;
+        return res.next;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private DeleteKthLastFromList() {
-    }
+    private DeleteKthLastFromList() {}
 }

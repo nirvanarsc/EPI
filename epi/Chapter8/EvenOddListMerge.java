@@ -4,55 +4,34 @@ import epi.ListNode;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
 public final class EvenOddListMerge {
 
+    @SuppressWarnings({ "ConstantConditions", "MethodParameterNamingConvention" })
     @EpiTest(testDataFile = "even_odd_list_merge.tsv")
-    public static ListNode<Integer> evenOddMerge(ListNode<Integer> l) {
-        if (l == null) return null;
-        final ListNode<Integer> evenDummyHead = new ListNode<>(0, null);
-        final ListNode<Integer> oddDummyHead = new ListNode<>(0, null);
-        final List<ListNode<Integer>> tails = Arrays.asList(evenDummyHead, oddDummyHead);
-        int turn = 0;
-        for (ListNode<Integer> iter = l; iter != null; iter = iter.next) {
-            tails.get(turn).next = iter;
-            tails.set(turn, iter);
-            turn ^= 1;
-        }
-        tails.get(1).next = null;
-        tails.get(0).next = oddDummyHead.next;
-        return evenDummyHead.next;
-    }
-
-    @EpiTest(testDataFile = "even_odd_list_merge.tsv")
-    public static ListNode<Integer> evenOddMerge2(ListNode<Integer> l) {
-        final ListNode<Integer> dummyHead = new ListNode<>(0, l);
-        final ListNode<Integer> odds = new ListNode<>(0, null);
-        ListNode<Integer> newOdd = odds;
-        while (l != null && l.next != null) {
-            final ListNode<Integer> next = l.next;
-            newOdd.next = next;
-            newOdd = newOdd.next;
-            if (l.next.next == null) {
-                l.next = odds.next;
-                break;
+    public static ListNode<Integer> evenOddMerge(ListNode<Integer> L) {
+        final ListNode<Integer> evenHead = new ListNode<>(-1, L);
+        final ListNode<Integer> oddHead = new ListNode<>(-1, L);
+        ListNode<Integer> odd = oddHead;
+        ListNode<Integer> even = evenHead;
+        ListNode<Integer> iter = L;
+        for (int i = 0; iter != null; i++) {
+            if (i % 2 == 0) {
+                even.next = iter;
+                even = even.next;
+            } else {
+                odd.next = iter;
+                odd = odd.next;
             }
-            l.next = l.next.next;
-            l = l.next;
-            next.next = null;
+            iter = iter.next;
         }
-        if (l != null) {
-            l.next = odds.next;
-        }
-        return dummyHead.next;
+        odd.next = null;
+        even.next = oddHead.next;
+        return evenHead.next;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private EvenOddListMerge() {
-    }
+    private EvenOddListMerge() {}
 }

@@ -6,45 +6,24 @@ import epi.utils.TestRunner;
 
 public final class RemoveDuplicatesFromSortedList {
 
+    @SuppressWarnings({ "ConstantConditions", "MethodParameterNamingConvention" })
     @EpiTest(testDataFile = "remove_duplicates_from_sorted_list.tsv")
-    public static ListNode<Integer> removeDuplicates(ListNode<Integer> l) {
-        if (l == null) return null;
-
-        ListNode<Integer> prev = l;
-        ListNode<Integer> curr = l;
-
-        while (curr != null) {
-            if (prev.data.equals(curr.data)) {
-                curr = curr.next;
-            } else {
-                prev.next = curr;
-                prev = curr;
+    public static ListNode<Integer> removeDuplicates(ListNode<Integer> L) {
+        ListNode<Integer> iter1 = L;
+        ListNode<Integer> iter2 = L;
+        while (iter2 != null) {
+            while (iter2 != null && iter1.data.equals(iter2.data)) {
+                iter2 = iter2.next;
             }
+            iter1.next = iter2;
+            iter1 = iter1.next;
         }
-        prev.next = null;
-
-        return l;
-    }
-
-    @EpiTest(testDataFile = "remove_duplicates_from_sorted_list.tsv")
-    public static ListNode<Integer> removeDuplicates2(ListNode<Integer> l) {
-        ListNode<Integer> iter = l;
-
-        while (iter != null) {
-            ListNode<Integer> nextDistinct = iter.next;
-            while (nextDistinct != null && nextDistinct.data.equals(iter.data)) {
-                nextDistinct = nextDistinct.next;
-            }
-            iter.next = nextDistinct;
-            iter = nextDistinct;
-        }
-        return l;
+        return L;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private RemoveDuplicatesFromSortedList() {
-    }
+    private RemoveDuplicatesFromSortedList() {}
 }

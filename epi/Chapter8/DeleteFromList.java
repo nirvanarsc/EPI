@@ -43,6 +43,5 @@ public final class DeleteFromList {
         TestRunner.run(args);
     }
 
-    private DeleteFromList() {
-    }
+    private DeleteFromList() {}
 }
