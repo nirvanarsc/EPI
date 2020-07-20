@@ -1,20 +1,20 @@
 package epi.Chapter9;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.TestFailure;
 import epi.utils.TestRunner;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 public final class QueueFromStacks {
 
     public static class Queue {
-        Deque<Integer> enq = new LinkedList<>();
-        Deque<Integer> deq = new LinkedList<>();
+        Deque<Integer> enq = new ArrayDeque<>();
+        Deque<Integer> deq = new ArrayDeque<>();
 
         public void enqueue(Integer x) {
             enq.addFirst(x);
@@ -30,7 +30,7 @@ public final class QueueFromStacks {
         }
     }
 
-    @EpiUserType(ctorParams = {String.class, int.class})
+    @EpiUserType(ctorParams = { String.class, int.class })
     public static class QueueOp {
         public String op;
         public int arg;
@@ -55,7 +55,9 @@ public final class QueueFromStacks {
                         break;
                     case "dequeue":
                         final int result = q.dequeue();
-                        if (result != op.arg) throw new TestFailure("Dequeue: expected " + op.arg + ", got " + result);
+                        if (result != op.arg) {
+                            throw new TestFailure("Dequeue: expected " + op.arg + ", got " + result);
+                        }
                         break;
                 }
             }
@@ -68,6 +70,5 @@ public final class QueueFromStacks {
         TestRunner.run(args);
     }
 
-    private QueueFromStacks() {
-    }
+    private QueueFromStacks() {}
 }

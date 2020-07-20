@@ -3,6 +3,7 @@ package epi.Chapter9;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,37 +11,29 @@ import java.util.Map;
 
 public final class IsValidParenthesization {
 
-    private static final Map<Character, Character> PAREN_MAP = new HashMap<>();
-
-    static {
-        PAREN_MAP.put('(', ')');
-        PAREN_MAP.put('[', ']');
-        PAREN_MAP.put('{', '}');
-    }
-
     @EpiTest(testDataFile = "is_valid_parenthesization.tsv")
     public static boolean isWellFormed(String s) {
-        final Deque<Character> openParens = new LinkedList<>();
-        for (int i = 0; i < s.length(); i++) {
-            final char currParen = s.charAt(i);
-            if (PAREN_MAP.keySet().contains(currParen)) {
-                openParens.addFirst(currParen);
-            } else {
-                if (openParens.isEmpty() || !PAREN_MAP.get(openParens.peekFirst()).equals(currParen)) {
+        final Map<Character, Character> paren = new HashMap<>();
+        paren.put(')', '(');
+        paren.put(']', '[');
+        paren.put('}', '{');
+        final Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if (paren.containsKey(c)) {
+                if (stack.isEmpty() || stack.getFirst() != paren.get(c)) {
                     return false;
                 }
-
-                openParens.pollFirst();
+                stack.removeFirst();
+            } else {
+                stack.addFirst(c);
             }
         }
-
-        return openParens.isEmpty();
+        return stack.isEmpty();
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private IsValidParenthesization() {
-    }
+    private IsValidParenthesization() {}
 }

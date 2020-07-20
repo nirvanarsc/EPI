@@ -1,60 +1,40 @@
 package epi.Chapter9;
 
-import epi.test_framework.EpiTest;
-import epi.utils.TestRunner;
-
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import epi.test_framework.EpiTest;
+import epi.utils.TestRunner;
 
 public final class SunsetView {
 
-    private static final class Building {
-        public Integer id;
-        public Integer height;
+    static class Pair {
+        int idx;
+        int val;
 
-        private Building(Integer id, Integer height) {
-            this.id = id;
-            this.height = height;
+        Pair(int idx, int val) {
+            this.idx = idx;
+            this.val = val;
         }
     }
 
     public static List<Integer> examineBuildingsWithSunset(Iterator<Integer> sequence) {
-        final Deque<Integer> buildings = new LinkedList<>();
-        final Deque<Integer> res = new LinkedList<>();
-        int i = 0;
-        while (sequence.hasNext()) {
-            final Integer curr = sequence.next();
-            while (!buildings.isEmpty() && buildings.peekFirst() <= curr) {
-                buildings.removeFirst();
-                res.removeFirst();
+        final Deque<Pair> stack = new ArrayDeque<>();
+        for (int i = 0; sequence.hasNext(); i++) {
+            final int curr = sequence.next();
+            while (!stack.isEmpty() && stack.getFirst().val <= curr) {
+                stack.removeFirst();
             }
-            buildings.addFirst(curr);
-            res.addFirst(i++);
+            stack.addFirst(new Pair(i, curr));
         }
-
-        return new ArrayList<>(res);
-    }
-
-    public static List<Integer> examineBuildingsWithSunset2(Iterator<Integer> sequence) {
-
-        final Deque<Building> buildings = new LinkedList<>();
-        int i = 0;
-        while (sequence.hasNext()) {
-            final Integer curr = sequence.next();
-            while (!buildings.isEmpty() && buildings.peekFirst().height <= curr) {
-                buildings.removeFirst();
-            }
-            buildings.addFirst(new Building(i++, curr));
+        final List<Integer> res = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            res.add(stack.removeFirst().idx);
         }
-
-        return buildings
-                .stream()
-                .map(building -> building.id)
-                .collect(Collectors.toList());
+        return res;
     }
 
     @EpiTest(testDataFile = "sunset_view.tsv")
@@ -62,15 +42,9 @@ public final class SunsetView {
         return examineBuildingsWithSunset(sequence.iterator());
     }
 
-    @EpiTest(testDataFile = "sunset_view.tsv")
-    public static List<Integer> examineBuildingsWithSunsetWrapper2(List<Integer> sequence) {
-        return examineBuildingsWithSunset2(sequence.iterator());
-    }
-
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private SunsetView() {
-    }
+    private SunsetView() {}
 }

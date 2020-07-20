@@ -1,48 +1,45 @@
 package epi.Chapter9;
 
-import epi.ListNode;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.TestFailure;
 import epi.utils.TestRunner;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 public final class StackWithMax {
 
     public static class Stack {
-        int size;
-        ListNode<Integer> stack = new ListNode<>(0, null);
-        Deque<Integer> max = new LinkedList<>();
+        Deque<Integer> stack = new ArrayDeque<>();
+        Deque<Integer> max = new ArrayDeque<>();
 
         public boolean empty() {
-            return size == 0;
+            return stack.isEmpty();
         }
 
         public Integer max() {
-            return max.isEmpty() ? Integer.MIN_VALUE : max.element();
+            return max.isEmpty() ? 0 : max.peekFirst();
         }
 
         public Integer pop() {
-            if (stack.next == null) return null;
-            size--;
-            final ListNode<Integer> node = stack;
-            stack = stack.next;
-            if (node.data.equals(max())) max.pollFirst();
-            return node.data;
+            if (max.getFirst().equals(stack.getFirst())) {
+                max.removeFirst();
+            }
+            return stack.removeFirst();
         }
 
         public void push(Integer x) {
-            size++;
-            stack = new ListNode<>(x, stack);
-            if (x >= max()) max.addFirst(x);
+            if (max.isEmpty() || max.getFirst() <= x) {
+                max.addFirst(x);
+            }
+            stack.addFirst(x);
         }
     }
 
-    @EpiUserType(ctorParams = {String.class, int.class})
+    @EpiUserType(ctorParams = { String.class, int.class })
     public static class StackOp {
         public String op;
         public int arg;
@@ -68,15 +65,21 @@ public final class StackWithMax {
                         break;
                     case "pop":
                         result = s.pop();
-                        if (result != op.arg) throw new TestFailure("Pop: expected " + op.arg + ", got " + result);
+                        if (result != op.arg) {
+                            throw new TestFailure("Pop: expected " + op.arg + ", got " + result);
+                        }
                         break;
                     case "max":
                         result = s.max();
-                        if (result != op.arg) throw new TestFailure("Max: expected " + op.arg + ", got " + result);
+                        if (result != op.arg) {
+                            throw new TestFailure("Max: expected " + op.arg + ", got " + result);
+                        }
                         break;
                     case "empty":
                         result = s.empty() ? 1 : 0;
-                        if (result != op.arg) throw new TestFailure("Empty: expected " + op.arg + ", got " + s);
+                        if (result != op.arg) {
+                            throw new TestFailure("Empty: expected " + op.arg + ", got " + s);
+                        }
                         break;
                     default:
                         throw new RuntimeException("Unsupported stack operation: " + op.op);
@@ -91,6 +94,5 @@ public final class StackWithMax {
         TestRunner.run(args);
     }
 
-    private StackWithMax() {
-    }
+    private StackWithMax() {}
 }
