@@ -8,22 +8,27 @@ public final class SumRootToLeaf {
 
     @EpiTest(testDataFile = "sum_root_to_leaf.tsv")
     public static int sumRootToLeaf(BinaryTreeNode<Integer> tree) {
-        return dfs(tree, 0);
+        final int[] res = { 0, 0 };
+        dfs(tree, res);
+        return res[0];
     }
 
-    public static int dfs(BinaryTreeNode<Integer> node, int parentSum) {
-        if (node == null) {
-            return 0;
+    private static void dfs(BinaryTreeNode<Integer> tree, int[] path) {
+        if (tree == null) {
+            return;
         }
-        final int val = parentSum << 1 | node.data;
-
-        return node.left == node.right ? val : dfs(node.right, val) + dfs(node.left, val);
+        path[1] = path[1] << 1 | tree.data;
+        dfs(tree.left, path);
+        if (tree.left == null && tree.right == null) {
+            path[0] += path[1];
+        }
+        dfs(tree.right, path);
+        path[1] >>= 1;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private SumRootToLeaf() {
-    }
+    private SumRootToLeaf() {}
 }

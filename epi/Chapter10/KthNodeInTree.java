@@ -8,12 +8,12 @@ import epi.utils.TestRunner;
 
 public final class KthNodeInTree {
 
-    public static class BinaryTreeNode<T> {
+    private static final class BinaryTreeNode<T> {
         public T data;
         public BinaryTreeNode<T> left, right;
         public int size;
 
-        public BinaryTreeNode(T data, BinaryTreeNode<T> left, BinaryTreeNode<T> right, int size) {
+        private BinaryTreeNode(T data, BinaryTreeNode<T> left, BinaryTreeNode<T> right, int size) {
             this.data = data;
             this.left = left;
             this.right = right;
@@ -21,34 +21,19 @@ public final class KthNodeInTree {
         }
     }
 
+    @SuppressWarnings({ "ConstantConditions", "TailRecursion" })
     public static BinaryTreeNode<Integer> findKthNodeBinaryTree(BinaryTreeNode<Integer> tree, int k) {
-        while (tree != null) {
-            final int leftSize = (tree.left == null ? 0 : tree.left.size) + 1;
-            if (k == leftSize) {
-                return tree;
-            } else if (k < leftSize) {
-                tree = tree.left;
-            } else {
-                k -= leftSize;
-                tree = tree.right;
-            }
+        final int leftSize = (tree.left == null ? 0 : tree.left.size) + 1;
+        if (k == leftSize) {
+            return tree;
         }
-
-        return null;
+        if (k <= leftSize) {
+            return findKthNodeBinaryTree(tree.left, k);
+        }
+        return findKthNodeBinaryTree(tree.right, k - leftSize);
     }
 
-//    Tail recursion
-//    public static BinaryTreeNode<Integer> findKthNodeBinaryTree(BinaryTreeNode<Integer> tree, int k) {
-//        final int leftSize = tree.left == null ? 0 : tree.left.size;
-//        if (k - 1 == leftSize) {
-//            return tree;
-//        } else if (k - 1 < leftSize) {
-//            return findKthNodeBinaryTree(tree.left, k);
-//        } else {
-//            return findKthNodeBinaryTree(tree.right, k - leftSize - 1);
-//        }
-//    }
-
+    @SuppressWarnings("ReturnOfNull")
     public static BinaryTreeNode<Integer> convertToTreeWithSize(BinaryTree<Integer> original) {
         if (original == null) {
             return null;
@@ -77,6 +62,5 @@ public final class KthNodeInTree {
         TestRunner.run(args);
     }
 
-    private KthNodeInTree() {
-    }
+    private KthNodeInTree() {}
 }

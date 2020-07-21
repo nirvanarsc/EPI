@@ -19,7 +19,6 @@ public final class TreeWithParentInorder {
             res.add(tree.data);
             tree = SuccessorInTree.findSuccessor(tree);
         }
-
         return res;
     }
 
@@ -27,6 +26,5 @@ public final class TreeWithParentInorder {
         TestRunner.run(args);
     }
 
-    private TreeWithParentInorder() {
-    }
+    private TreeWithParentInorder() {}
 }

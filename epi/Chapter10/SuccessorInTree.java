@@ -9,24 +9,20 @@ import epi.utils.TestRunner;
 public final class SuccessorInTree {
 
     public static BinaryTree<Integer> findSuccessor(BinaryTree<Integer> node) {
-        if (node.right != null) {
-            node = node.right;
-            while (node.left != null) {
-                node = node.left;
+        if (node.right == null) {
+            BinaryTree<Integer> prev = node;
+            node = node.parent;
+            while (node != null && prev == node.right) {
+                prev = node;
+                node = node.parent;
             }
-
             return node;
         }
-
-        BinaryTree<Integer> c = node;
-        while (node.parent != null) {
-            node = node.parent;
-            if (node.left == c) {
-                return node;
-            }
-            c = node;
+        node = node.right;
+        while (node.left != null) {
+            node = node.left;
         }
-        return null;
+        return node;
     }
 
     @EpiTest(testDataFile = "successor_in_tree.tsv")
@@ -43,6 +39,5 @@ public final class SuccessorInTree {
         TestRunner.run(args);
     }
 
-    private SuccessorInTree() {
-    }
+    private SuccessorInTree() {}
 }

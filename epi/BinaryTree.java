@@ -18,8 +18,7 @@ public class BinaryTree<T> {
     this.right = right;
   }
 
-  public BinaryTree(T data, BinaryTree<T> left, BinaryTree<T> right,
-                    BinaryTree<T> parent) {
+  public BinaryTree(T data, BinaryTree<T> left, BinaryTree<T> right, BinaryTree<T> parent) {
     this(data, left, right);
     this.parent = parent;
   }

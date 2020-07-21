@@ -51,6 +51,5 @@ public final class TestRunner {
         }
     }
 
-    private TestRunner() {
-    }
+    private TestRunner() {}
 }

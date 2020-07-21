@@ -6,46 +6,39 @@ import epi.utils.TestRunner;
 
 public final class IsTreeBalanced {
 
-    static class HeightBalance {
-        boolean balance;
-        int height;
+    static class Pair {
+        int d;
+        boolean isBalanced;
 
-        HeightBalance(boolean balance, int height) {
-            this.balance = balance;
-            this.height = height;
+        Pair(int d, boolean isBalanced) {
+            this.d = d;
+            this.isBalanced = isBalanced;
         }
     }
 
     @EpiTest(testDataFile = "is_tree_balanced.tsv")
     public static boolean isBalanced(BinaryTreeNode<Integer> tree) {
-        return checkBalanced(tree).balance;
+        return dfs(tree).isBalanced;
     }
 
-    private static HeightBalance checkBalanced(BinaryTreeNode<Integer> tree) {
+    private static Pair dfs(BinaryTreeNode<Integer> tree) {
         if (tree == null) {
-            return new HeightBalance(true, -1);
+            return new Pair(0, true);
         }
-
-        final HeightBalance left = checkBalanced(tree.left);
-        if (!left.balance) {
+        final Pair left = dfs(tree.left);
+        if (!left.isBalanced) {
             return left;
         }
-
-        final HeightBalance right = checkBalanced(tree.right);
-        if (!right.balance) {
+        final Pair right = dfs(tree.right);
+        if (!right.isBalanced) {
             return right;
         }
-
-        final boolean balanced = Math.abs(left.height - right.height) <= 1;
-        final int height = Math.max(left.height, right.height) + 1;
-
-        return new HeightBalance(balanced, height);
+        return new Pair(Math.max(left.d, right.d) + 1, Math.abs(left.d - right.d) <= 1);
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private IsTreeBalanced() {
-    }
+    private IsTreeBalanced() {}
 }

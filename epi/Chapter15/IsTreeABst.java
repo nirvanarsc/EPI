@@ -65,7 +65,7 @@ public final class IsTreeABst {
         if (tree == null) {
             return true;
         }
-        final List<Integer> integers = TreeInorder.inorderTraversalRecursive(tree);
+        final List<Integer> integers = TreeInorder.inorderTraversalIterative(tree);
         Integer prev = integers.get(0);
         for (int i = 1; i < integers.size(); i++) {
             if (integers.get(i) < prev) {

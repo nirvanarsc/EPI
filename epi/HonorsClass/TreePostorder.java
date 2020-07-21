@@ -1,18 +1,20 @@
 package epi.HonorsClass;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+
 import epi.BinaryTreeNode;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
-
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 
 public final class TreePostorder {
 
     @EpiTest(testDataFile = "tree_postorder.tsv")
     public static List<Integer> postorderTraversalRecursive(BinaryTreeNode<Integer> tree) {
-        final List<Integer> res = new LinkedList<>();
+        final List<Integer> res = new ArrayList<>();
         helper(tree, res);
         return res;
     }
@@ -28,19 +30,18 @@ public final class TreePostorder {
 
     @EpiTest(testDataFile = "tree_postorder.tsv")
     public static List<Integer> postorderTraversalIterative(BinaryTreeNode<Integer> tree) {
-        final LinkedList<Integer> res = new LinkedList<>();
-        final Deque<BinaryTreeNode<Integer>> s = new LinkedList<>();
-        s.addFirst(tree);
-
+        final List<Integer> res = new ArrayList<>();
+        final Deque<BinaryTreeNode<Integer>> s = new ArrayDeque<>();
+        if (tree != null) {
+            s.addFirst(tree);
+        }
         while (!s.isEmpty()) {
             final BinaryTreeNode<Integer> curr = s.removeFirst();
-            if (curr != null) {
-                res.addFirst(curr.data);
-                s.addFirst(curr.left);
-                s.addFirst(curr.right);
-            }
+            res.add(curr.data);
+            if (curr.left != null) { s.addFirst(curr.left); }
+            if (curr.right != null) { s.addFirst(curr.right); }
         }
-
+        Collections.reverse(res);
         return res;
     }
 
@@ -48,6 +49,5 @@ public final class TreePostorder {
         TestRunner.run(args);
     }
 
-    private TreePostorder() {
-    }
+    private TreePostorder() {}
 }

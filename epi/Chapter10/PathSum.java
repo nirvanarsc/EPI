@@ -8,22 +8,33 @@ public final class PathSum {
 
     @EpiTest(testDataFile = "path_sum.tsv")
     public static boolean hasPathSum(BinaryTreeNode<Integer> tree, int remainingWeight) {
-        return dfs(tree, remainingWeight);
+        final int[] path = { remainingWeight, 0 };
+        return dfs(tree, path);
     }
 
-    public static boolean dfs(BinaryTreeNode<Integer> node, int remainingWeight) {
-        if (node == null) {
+    private static boolean dfs(BinaryTreeNode<Integer> tree, int[] path) {
+        if (tree == null) {
             return false;
         }
-        final int val = remainingWeight - node.data;
-
-        return node.left == node.right && val == 0 ? true : dfs(node.right, val) || dfs(node.left, val);
+        path[1] += tree.data;
+        if (dfs(tree.left, path)) {
+            return true;
+        }
+        if (tree.left == null && tree.right == null) {
+            if (path[0] == path[1]) {
+                return true;
+            }
+        }
+        if (dfs(tree.right, path)) {
+            return true;
+        }
+        path[1] -= tree.data;
+        return false;
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private PathSum() {
-    }
+    private PathSum() {}
 }

@@ -9,71 +9,37 @@ import epi.utils.TestRunner;
 
 public final class LowestCommonAncestor {
 
-    static class Status {
-        int targetNodes;
-        BinaryTreeNode<Integer> ancestor;
+    static class Pair {
+        int matched;
+        BinaryTreeNode<Integer> p;
 
-        Status(int targetNodes, BinaryTreeNode<Integer> ancestor) {
-            this.targetNodes = targetNodes;
-            this.ancestor = ancestor;
+        Pair(int matched, BinaryTreeNode<Integer> p) {
+            this.matched = matched;
+            this.p = p;
         }
     }
 
     public static BinaryTreeNode<Integer> LCA(BinaryTreeNode<Integer> tree,
                                               BinaryTreeNode<Integer> node0,
                                               BinaryTreeNode<Integer> node1) {
-        return helper(tree, node0, node1).ancestor;
+        return dfs(tree, node0, node1).p;
     }
 
-    public static Status helper(BinaryTreeNode<Integer> tree,
-                                BinaryTreeNode<Integer> node0,
-                                BinaryTreeNode<Integer> node1) {
-        if (tree == null) {
-            return new Status(0, null);
+    private static Pair dfs(BinaryTreeNode<Integer> t, BinaryTreeNode<Integer> a, BinaryTreeNode<Integer> b) {
+        if (t == null) {
+            return new Pair(0, null);
         }
-
-        final Status left = helper(tree.left, node0, node1);
-        if (left.targetNodes == 2) {
+        final Pair left = dfs(t.left, a, b);
+        if (left.matched == 2) {
             return left;
         }
-
-        final Status right = helper(tree.right, node0, node1);
-        if (right.targetNodes == 2) {
+        final Pair right = dfs(t.right, a, b);
+        if (right.matched == 2) {
             return right;
         }
-
-        final int targetNodes = left.targetNodes + right.targetNodes + (tree == node0 ? 1 : 0) + (tree == node1 ? 1 : 0);
-        return new Status(targetNodes, targetNodes == 2 ? tree : null);
+        final int nextMatches = (t == a ? 1 : 0) + (t == b ? 1 : 0) + left.matched + right.matched;
+        return new Pair(nextMatches, t);
     }
-
-//    public static BinaryTreeNode<Integer> LCA(BinaryTreeNode<Integer> tree,
-//                                              BinaryTreeNode<Integer> node0,
-//                                              BinaryTreeNode<Integer> node1) {
-//        if (isParent(node0, node1)) return node0;
-//        if (isParent(node1, node0)) return node1;
-//
-//        final Deque<BinaryTreeNode<Integer>> q = new LinkedList<>();
-//        q.offerLast(tree);
-//        BinaryTreeNode<Integer> res = tree;
-//        while (!q.isEmpty()) {
-//            final BinaryTreeNode<Integer> curr = q.pollFirst();
-//            if (isParent(curr, node0) && isParent(curr, node1)) res = curr;
-//            if (curr.left != null) q.offerLast(curr.left);
-//            if (curr.right != null) q.offerLast(curr.right);
-//        }
-//        return res;
-//    }
-//
-//    public static boolean isParent(BinaryTreeNode<Integer> p, BinaryTreeNode<Integer> c) {
-//        if (p == null) {
-//            return false;
-//        }
-//        if (p == c) {
-//            return true;
-//        }
-//
-//        return isParent(p.left, c) || isParent(p.right, c);
-//    }
 
     @EpiTest(testDataFile = "lowest_common_ancestor.tsv")
     public static int lcaWrapper(TimedExecutor executor,
@@ -94,6 +60,5 @@ public final class LowestCommonAncestor {
         TestRunner.run(args);
     }
 
-    private LowestCommonAncestor() {
-    }
+    private LowestCommonAncestor() {}
 }

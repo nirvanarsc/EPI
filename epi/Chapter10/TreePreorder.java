@@ -1,18 +1,19 @@
 package epi.Chapter10;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 import epi.BinaryTreeNode;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
-
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 
 public final class TreePreorder {
 
     @EpiTest(testDataFile = "tree_preorder.tsv")
     public static List<Integer> preorderTraversalRecursive(BinaryTreeNode<Integer> tree) {
-        final List<Integer> res = new LinkedList<>();
+        final List<Integer> res = new ArrayList<>();
         helper(tree, res);
         return res;
     }
@@ -27,20 +28,18 @@ public final class TreePreorder {
     }
 
     @EpiTest(testDataFile = "tree_preorder.tsv")
-    public static List<Integer> preorderTraversalIterative(BinaryTreeNode<Integer> tree) {
-        final LinkedList<Integer> res = new LinkedList<>();
-        final Deque<BinaryTreeNode<Integer>> s = new LinkedList<>();
-        s.addFirst(tree);
-
-        while (!s.isEmpty()) {
-            final BinaryTreeNode<Integer> curr = s.removeFirst();
-            if (curr != null) {
-                res.addLast(curr.data);
-                s.addFirst(curr.right);
-                s.addFirst(curr.left);
-            }
+    public static List<Integer> preorderTraversal(BinaryTreeNode<Integer> tree) {
+        final Deque<BinaryTreeNode<Integer>> stack = new ArrayDeque<>();
+        final List<Integer> res = new ArrayList<>();
+        if (tree != null) {
+            stack.addFirst(tree);
         }
-
+        while (!stack.isEmpty()) {
+            final BinaryTreeNode<Integer> curr = stack.removeFirst();
+            res.add(curr.data);
+            if (curr.right != null) { stack.addFirst(curr.right); }
+            if (curr.left != null) { stack.addFirst(curr.left); }
+        }
         return res;
     }
 
@@ -48,6 +47,5 @@ public final class TreePreorder {
         TestRunner.run(args);
     }
 
-    private TreePreorder() {
-    }
+    private TreePreorder() {}
 }

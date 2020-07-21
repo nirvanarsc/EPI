@@ -1,33 +1,32 @@
 package epi.Chapter10;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import epi.BinaryTreeNode;
 import epi.test_framework.EpiTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
 import epi.utils.TestRunner;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public final class TreeConnectLeaves {
 
     public static List<BinaryTreeNode<Integer>> createListOfLeaves(BinaryTreeNode<Integer> tree) {
-        final List<BinaryTreeNode<Integer>> res = new LinkedList<>();
-        helper(tree, res);
+        final List<BinaryTreeNode<Integer>> res = new ArrayList<>();
+        dfs(tree, res);
         return res;
     }
 
-    public static void helper(BinaryTreeNode<Integer> tree, List<BinaryTreeNode<Integer>> list) {
+    private static void dfs(BinaryTreeNode<Integer> tree, List<BinaryTreeNode<Integer>> list) {
         if (tree == null) {
             return;
         }
-        if (tree.left == tree.right) {
+        dfs(tree.left, list);
+        if (tree.left == null && tree.right == null) {
             list.add(tree);
-        } else {
-            helper(tree.left, list);
-            helper(tree.right, list);
         }
+        dfs(tree.right, list);
     }
 
     @EpiTest(testDataFile = "tree_connect_leaves.tsv")
@@ -40,14 +39,13 @@ public final class TreeConnectLeaves {
         }
 
         return result.stream()
-                .map(x -> x.data)
-                .collect(Collectors.toList());
+                     .map(x -> x.data)
+                     .collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
         TestRunner.run(args);
     }
 
-    private TreeConnectLeaves() {
-    }
+    private TreeConnectLeaves() {}
 }
