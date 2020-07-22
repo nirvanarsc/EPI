@@ -1,5 +1,6 @@
 package epi.Chapter11;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ public class StackFromHeap<T> {
         pq.add(new Node<>(e, idx++));
     }
 
+    @SuppressWarnings("ReturnOfNull")
     T peek() {
         if (pq.isEmpty()) { return null; }
         return pq.peek().element;
@@ -44,7 +46,7 @@ public class StackFromHeap<T> {
     // Add "-ea" (-enableassertions) to VM options before execution
     public static void main(String[] args) {
         final StackFromHeap<Integer> stackFromHeap = new StackFromHeap<>();
-        final Deque<Integer> stack = new LinkedList<>();
+        final Deque<Integer> stack = new ArrayDeque<>();
         IntStream.range(0, 100).forEach(i -> {
             stackFromHeap.push(i);
             stack.addFirst(i);
@@ -56,7 +58,7 @@ public class StackFromHeap<T> {
             assert stackPop.equals(heapPop);
         }
 
-        assert stack.peekFirst().equals(stackFromHeap.peek());
+        assert stack.getFirst().equals(stackFromHeap.peek());
 
         IntStream.range(100, 200).forEach(i -> {
             stackFromHeap.push(i);

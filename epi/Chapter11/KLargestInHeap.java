@@ -12,11 +12,11 @@ import epi.utils.TestRunner;
 
 public final class KLargestInHeap {
 
-    static class Node {
+    static class Pair {
         int idx;
         int val;
 
-        Node(int idx, int val) {
+        Pair(int idx, int val) {
             this.idx = idx;
             this.val = val;
         }
@@ -24,18 +24,17 @@ public final class KLargestInHeap {
 
     @EpiTest(testDataFile = "k_largest_in_heap.tsv")
     public static List<Integer> kLargestInBinaryHeap(List<Integer> integers, int k) {
-        final PriorityQueue<Node> max = new PriorityQueue<>((x, y) -> Integer.compare(y.val, x.val));
+        final PriorityQueue<Pair> pq = new PriorityQueue<>((x, y) -> Integer.compare(y.val, x.val));
         final List<Integer> res = new ArrayList<>();
-        max.add(new Node(0, integers.get(0)));
-        while (k-- > 0) {
-            final Node curr = max.poll();
+        pq.add(new Pair(0, integers.get(0)));
+        for (int i = 0; i < k; i++) {
+            final Pair curr = pq.remove();
             res.add(curr.val);
-            final int leftChild = 2 * curr.idx + 1;
-            final int rightChild = 2 * curr.idx + 2;
-            if (leftChild < integers.size()) { max.add(new Node(leftChild, integers.get(leftChild))); }
-            if (rightChild < integers.size()) { max.add(new Node(rightChild, integers.get(rightChild))); }
+            final int left = 2 * curr.idx + 1;
+            final int right = 2 * curr.idx + 2;
+            if (left < integers.size()) { pq.add(new Pair(left, integers.get(left))); }
+            if (right < integers.size()) { pq.add(new Pair(right, integers.get(right))); }
         }
-
         return res;
     }
 

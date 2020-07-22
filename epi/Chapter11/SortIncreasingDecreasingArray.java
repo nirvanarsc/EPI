@@ -12,20 +12,21 @@ public final class SortIncreasingDecreasingArray {
     @EpiTest(testDataFile = "sort_increasing_decreasing_array.tsv")
     public static List<Integer> sortKIncreasingDecreasingArray(List<Integer> list) {
         final List<List<Integer>> sortedArrays = new ArrayList<>();
-        int begin = 0;
+        int prev = 0;
         boolean increasing = true;
         for (int i = 1; i <= list.size(); i++) {
-            if (i == list.size() || (list.get(i - 1) < list.get(i) && !increasing) || (list.get(i - 1) >= list.get(i) && increasing)) {
-                final List<Integer> subList = list.subList(begin, i);
+            if (i == list.size()
+                || (list.get(i - 1) < list.get(i) && !increasing)
+                || (list.get(i - 1) >= list.get(i) && increasing)) {
+                final List<Integer> subList = list.subList(prev, i);
                 if (!increasing) {
                     Collections.reverse(subList);
                 }
                 sortedArrays.add(subList);
-                begin = i;
                 increasing = !increasing;
+                prev = i;
             }
         }
-
         return SortedArraysMerge.mergeSortedArrays(sortedArrays);
     }
 
@@ -33,6 +34,5 @@ public final class SortIncreasingDecreasingArray {
         TestRunner.run(args);
     }
 
-    private SortIncreasingDecreasingArray() {
-    }
+    private SortIncreasingDecreasingArray() {}
 }

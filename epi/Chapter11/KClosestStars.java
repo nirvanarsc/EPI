@@ -1,11 +1,5 @@
 package epi.Chapter11;
 
-import epi.test_framework.EpiTest;
-import epi.test_framework.EpiTestComparator;
-import epi.test_framework.EpiTestExpectedType;
-import epi.test_framework.EpiUserType;
-import epi.utils.TestRunner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,9 +9,15 @@ import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.function.BiPredicate;
 
+import epi.test_framework.EpiTest;
+import epi.test_framework.EpiTestComparator;
+import epi.test_framework.EpiTestExpectedType;
+import epi.test_framework.EpiUserType;
+import epi.utils.TestRunner;
+
 public final class KClosestStars {
 
-    @EpiUserType(ctorParams = {double.class, double.class, double.class})
+    @EpiUserType(ctorParams = { double.class, double.class, double.class })
     public static class Star implements Comparable<Star> {
         private final double x;
         private final double y;
@@ -96,6 +96,5 @@ public final class KClosestStars {
         TestRunner.run(args);
     }
 
-    private KClosestStars() {
-    }
+    private KClosestStars() {}
 }
