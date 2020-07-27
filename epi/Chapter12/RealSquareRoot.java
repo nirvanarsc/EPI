@@ -25,7 +25,7 @@ public final class RealSquareRoot {
         }
 
         while (compare(low, high) == SMALLER) {
-            final double mid = low + 0.5 * (high - low);
+            final double mid = 0.5 * (low + high);
             final double midSquare = mid * mid;
             if (compare(midSquare, x) == SMALLER) {
                 low = mid;
@@ -42,7 +42,7 @@ public final class RealSquareRoot {
     @EpiTest(testDataFile = "real_square_root.tsv")
     public static double newtonsMethod(double x) {
         if (x == 0) { return 0; }
-        double guess = x >= 1.0 ? 1.0 : x;
+        double guess = Math.min(x, 1.0);
         while (true) {
             final double next = (guess + x / guess) * 0.5;
             if (Math.abs(guess - next) < NEWTON_TOLERANCE) { break; }

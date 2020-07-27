@@ -14,19 +14,13 @@ public final class KthLargestInArray {
     @EpiTest(testDataFile = "kth_largest_in_array.tsv")
     public static int findKthLargest(int k, List<Integer> integers) {
         final PriorityQueue<Integer> min = new PriorityQueue<>(k);
-
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < integers.size(); i++) {
             min.add(integers.get(i));
-        }
-
-        for (int i = k; i < integers.size(); i++) {
-            if (!min.isEmpty() && min.peek() < integers.get(i)) {
-                min.poll();
-                min.add(integers.get(i));
+            if (min.size() > k) {
+                min.remove();
             }
         }
-
-        return min.peek();
+        return min.element();
     }
 
     @EpiTest(testDataFile = "kth_largest_in_array.tsv")
@@ -49,7 +43,6 @@ public final class KthLargestInArray {
                 high = newIdx - 1;
             }
         }
-
         return low;
     }
 
@@ -66,22 +59,8 @@ public final class KthLargestInArray {
                 Collections.swap(a, mid, end--);
             }
         }
-
         return mid - 1;
     }
-
-//    private static int partitionAroundPivot(int pivotIdx, List<Integer> integers, int start, int end) {
-//        final int pivot = integers.get(pivotIdx);
-//        int newPivotIdx = start;
-//        Collections.swap(integers, pivotIdx, end);
-//        for (int i = start; i < end; ++i) {
-//            if (integers.get(i) > pivot) {
-//                Collections.swap(integers, i, newPivotIdx++);
-//            }
-//        }
-//        Collections.swap(integers, end, newPivotIdx);
-//        return newPivotIdx;
-//    }
 
     public static void main(String[] args) {
         TestRunner.run(args);

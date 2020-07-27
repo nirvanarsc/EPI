@@ -15,7 +15,6 @@ public final class AbsentValueArray {
         for (Integer integer : stream) {
             cache[integer / Integer.SIZE] |= 1 << integer % Integer.SIZE;
         }
-
         for (int i = 0; i < cache.length; i++) {
             int curr = cache[i];
             if (curr != 0xffffffff) {
@@ -27,7 +26,6 @@ public final class AbsentValueArray {
                 return Integer.SIZE * i + j;
             }
         }
-
         return -1;
     }
 
@@ -38,7 +36,6 @@ public final class AbsentValueArray {
             final int idx = integer >>> 16;
             ++cache[idx];
         }
-
         for (int i = 0; i < cache.length; i++) {
             if (cache[i] < NUM_BUCKET) {
                 final BitSet bitVec = new BitSet(NUM_BUCKET);
@@ -54,7 +51,6 @@ public final class AbsentValueArray {
                 }
             }
         }
-
         return -1;
     }
 

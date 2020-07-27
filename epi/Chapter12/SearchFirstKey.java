@@ -7,22 +7,23 @@ import epi.utils.TestRunner;
 
 public final class SearchFirstKey {
 
+    @SuppressWarnings("MethodParameterNamingConvention")
     @EpiTest(testDataFile = "search_first_key.tsv")
-    public static int searchFirstOfK(List<Integer> integers, int k) {
-        int low = 0, high = integers.size() - 1, ans = -1;
-        while (low <= high) {
-            final int mid = (low + high) >>> 1;
-            if (integers.get(mid) < k) {
-                low = mid + 1;
-            } else if (integers.get(mid) == k) {
-                high = mid - 1;
-                ans = mid;
+    public static int searchFirstOfK(List<Integer> A, int k) {
+        if (A.isEmpty()) {
+            return -1;
+        }
+        int lo = 0;
+        int hi = A.size() - 1;
+        while (lo < hi) {
+            final int mid = lo + hi >>> 1;
+            if (A.get(mid) < k) {
+                lo = mid + 1;
             } else {
-                high = mid - 1;
+                hi = mid;
             }
         }
-
-        return ans;
+        return A.get(lo) == k ? lo : -1;
     }
 
     public static void main(String[] args) {
