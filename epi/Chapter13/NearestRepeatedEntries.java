@@ -11,16 +11,15 @@ public final class NearestRepeatedEntries {
 
     @EpiTest(testDataFile = "nearest_repeated_entries.tsv")
     public static int findNearestRepetition(List<String> paragraph) {
-        int ans = Integer.MAX_VALUE;
-        final Map<String, Integer> distance = new HashMap<>();
-        for (int i = 0; i < paragraph.size(); i++) {
-            final String curr = paragraph.get(i);
-            if (distance.containsKey(curr)) {
-                ans = Math.min(ans, i - distance.get(curr));
-            }
-            distance.put(curr, i);
+        final Map<String, Integer> map = new HashMap<>();
+        final int n = paragraph.size();
+        int res = n;
+        for (int i = 0; i < n; i++) {
+            final String word = paragraph.get(i);
+            res = Math.min(res, i - map.getOrDefault(word, -n));
+            map.put(word, i);
         }
-        return ans == Integer.MAX_VALUE ? -1 : ans;
+        return res == n ? -1 : res;
     }
 
     public static void main(String[] args) {

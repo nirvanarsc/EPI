@@ -1,8 +1,5 @@
 package epi.Chapter13;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
@@ -10,13 +7,15 @@ public final class IsAnonymousLetterConstructible {
 
     @EpiTest(testDataFile = "is_anonymous_letter_constructible.tsv")
     public static boolean isLetterConstructibleFromMagazine(String letterText, String magazineText) {
-        final Map<Character, Integer> letterMap = new HashMap<>();
-        for (char c : letterText.toCharArray()) { letterMap.merge(c, 1, Integer::sum); }
-        for (char c : magazineText.toCharArray()) {
-            letterMap.computeIfPresent(c, (k, v) -> (v == 1) ? null : v - 1);
+        final int[] count = new int[128];
+        for (char c : magazineText.toCharArray()) { count[c]++; }
+        for (char c : letterText.toCharArray()) { count[c]--; }
+        for (int freq : count) {
+            if (freq < 0) {
+                return false;
+            }
         }
-
-        return letterMap.isEmpty();
+        return true;
     }
 
     public static void main(String[] args) {

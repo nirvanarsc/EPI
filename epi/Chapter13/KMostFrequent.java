@@ -5,12 +5,9 @@ import static epi.Chapter12.KthLargestInArray.findKthLargestIndex;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -18,40 +15,31 @@ import java.util.stream.Collectors;
 public final class KMostFrequent {
 
     public static List<String> kMostFrequent(List<String> strings, int k) {
-        final Map<String, Integer> frequencyMap = new HashMap<>();
-        final PriorityQueue<Entry<String, Integer>> min =
-                new PriorityQueue<>(k, Comparator.comparing(Entry::getValue));
-
-        for (String s : strings) {
-            frequencyMap.merge(s, 1, Integer::sum);
+        final Map<String, Integer> freq = new HashMap<>();
+        final PriorityQueue<Map.Entry<String, Integer>> pq =
+                new PriorityQueue<>(k, Map.Entry.comparingByValue());
+        for (String str : strings) {
+            freq.merge(str, 1, Integer::sum);
         }
-
-        final Iterator<Entry<String, Integer>> iterator = frequencyMap.entrySet().iterator();
-        for (int i = 0; i < k; i++) {
-            min.add(iterator.next());
-        }
-
-        while (iterator.hasNext()) {
-            final Entry<String, Integer> curr = iterator.next();
-            if (!min.isEmpty() && min.peek().getValue() < curr.getValue()) {
-                min.poll();
-                min.add(curr);
+        for (Map.Entry<String, Integer> curr : freq.entrySet()) {
+            pq.add(curr);
+            if (pq.size() > k) {
+                pq.remove();
             }
         }
-
-        return min.stream().map(Entry::getKey).collect(Collectors.toList());
+        return pq.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     public static List<String> kMostFrequentInPlace(List<String> strings, int k) {
-        final Map<String, Integer> frequencyMap = new HashMap<>();
-        for (String s : strings) {
-            frequencyMap.merge(s, 1, Integer::sum);
+        final Map<String, Integer> freq = new HashMap<>();
+        for (String str : strings) {
+            freq.merge(str, 1, Integer::sum);
         }
-        final List<Entry<String, Integer>> entries = new ArrayList<>(frequencyMap.entrySet());
+        final List<Map.Entry<String, Integer>> entries = new ArrayList<>(freq.entrySet());
 
-        final int newIdx = findKthLargestIndex(k, entries, Comparator.comparing(Entry::getValue));
+        final int newIdx = findKthLargestIndex(k, entries, Map.Entry.comparingByValue());
 
-        return entries.subList(0, newIdx + 1).stream().map(Entry::getKey).collect(Collectors.toList());
+        return entries.subList(0, newIdx + 1).stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     public static void main(String[] args) throws FileNotFoundException {

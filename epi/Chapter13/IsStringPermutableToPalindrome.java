@@ -1,8 +1,5 @@
 package epi.Chapter13;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
@@ -10,20 +7,15 @@ public final class IsStringPermutableToPalindrome {
 
     @EpiTest(testDataFile = "is_string_permutable_to_palindrome.tsv")
     public static boolean canFormPalindrome(String s) {
-        final Map<Character, Integer> map = new HashMap<>();
+        final int[] map = new int[128];
         for (char c : s.toCharArray()) {
-            map.merge(c, 1, Integer::sum);
+            map[c]++;
         }
-        boolean odd = false;
-        for (int i : map.values()) {
-            if (((i & 1) == 1) && odd) {
-                return false;
-            } else if ((i & 1) == 1) {
-                odd = true;
-            }
+        int odds = 0;
+        for (int freq : map) {
+            odds += freq % 2;
         }
-
-        return true;
+        return odds <= 1;
     }
 
     public static void main(String[] args) {

@@ -10,12 +10,12 @@ import epi.test_framework.TestFailure;
 import epi.utils.TestRunner;
 
 public class LruCache {
-    LinkedHashMap<Integer, Integer> map;
 
-    LruCache(final int capacity) {
-        map = new LinkedHashMap<Integer, Integer>(capacity, 0.75F, true) {
+    LinkedHashMap<Integer, Integer> lruCache;
 
-            private static final long serialVersionUID = 3168251386275155489L;
+    LruCache(int capacity) {
+        lruCache = new LinkedHashMap<Integer, Integer>(capacity, 1.0f, true) {
+            private static final long serialVersionUID = 5829253835357566110L;
 
             @Override
             protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
@@ -25,15 +25,15 @@ public class LruCache {
     }
 
     public Integer lookup(Integer key) {
-        return map.getOrDefault(key, -1);
+        return lruCache.getOrDefault(key, -1);
     }
 
     public void insert(Integer key, Integer value) {
-        map.putIfAbsent(key, value);
+        lruCache.putIfAbsent(key, value);
     }
 
     public Boolean erase(Object key) {
-        return map.remove(key) != null;
+        return lruCache.remove(key) != null;
     }
 
     @EpiUserType(ctorParams = { String.class, int.class, int.class })

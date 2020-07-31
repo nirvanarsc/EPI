@@ -2,7 +2,6 @@ package epi.Chapter13;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,31 +15,55 @@ import epi.utils.TestRunner;
 
 public final class SmallestSubarrayCoveringSet {
 
-    public static Subarray findSmallestSubarrayCoveringSet3(Iterator<String> iter, Set<String> keywords) {
+    public static Subarray findSmallestSubarrayCoveringSetLHM(List<String> paragraph, Set<String> keywords) {
         final Map<String, Integer> dict = new LinkedHashMap<>();
         final Subarray res = new Subarray(-1, -1);
-        int idx = 0;
-        while (iter.hasNext()) {
-            final String s = iter.next();
+        for (int i = 0; i < paragraph.size(); i++) {
+            final String s = paragraph.get(i);
             if (keywords.contains(s)) {
                 // Updating the value of an existing key does not update the internal access queue.
-                // Therefore we explicitly remove the existing entry with key s and then put (s,idx).
-                dict.computeIfPresent(s, (k, v) -> null);
-                dict.put(s, idx);
+                // Therefore we explicitly remove the existing entry with key s and then put (s,i).
+                dict.remove(s);
+                dict.put(s, i);
             }
             if (dict.size() == keywords.size()) {
                 final Integer firstEntry = dict.entrySet().iterator().next().getValue();
-                if ((res.start == -1 && res.end == -1) || idx - firstEntry < res.end - res.start) {
+                if ((res.start == -1 && res.end == -1) || i - firstEntry < res.end - res.start) {
                     res.start = firstEntry;
-                    res.end = idx;
+                    res.end = i;
                 }
             }
-            ++idx;
         }
         return res;
     }
 
-    public static Subarray findSmallestSubarrayCoveringSet2(List<String> list, Set<String> keywords) {
+    public static Subarray findSmallestSubarrayCoveringSetSW(List<String> paragraph, Set<String> keywords) {
+        final Map<String, Integer> count = new HashMap<>();
+        for (String kw : keywords) {
+            count.merge(kw, 1, Integer::sum);
+        }
+        int match = keywords.size();
+        int j = 0;
+        int minL = Integer.MAX_VALUE;
+        int minStart = -1;
+        for (int i = 0; i < paragraph.size(); i++) {
+            if (count.merge(paragraph.get(i), -1, Integer::sum) >= 0) {
+                match--;
+            }
+            while (match == 0) {
+                if (i - j < minL) {
+                    minL = i - j;
+                    minStart = j;
+                }
+                if (count.merge(paragraph.get(j++), 1, Integer::sum) > 0) {
+                    match++;
+                }
+            }
+        }
+        return new Subarray(minStart, minStart + minL);
+    }
+
+    public static Subarray findSmallestSubarrayCoveringSet(List<String> list, Set<String> keywords) {
         final Map<String, Integer> dict = new HashMap<>();
         final Subarray result = new Subarray(-1, -1);
         for (int left = 0, right = 0; right < list.size(); ++right) {
@@ -58,29 +81,6 @@ public final class SmallestSubarrayCoveringSet {
         return result;
     }
 
-    public static Subarray findSmallestSubarrayCoveringSet(List<String> list, Set<String> keywords) {
-        final Subarray res = new Subarray(0, Integer.MAX_VALUE);
-        for (int i = 0; i < list.size(); i++) {
-            if (keywords.contains(list.get(i))) {
-                final int newEnd = check(i, list, new HashSet<>(keywords));
-                if (newEnd != Integer.MAX_VALUE && res.end - res.start > newEnd - i) {
-                    res.start = i;
-                    res.end = newEnd;
-                }
-            }
-        }
-        return res;
-    }
-
-    private static int check(int start, List<String> list, Set<String> keywords) {
-        for (int i = start; i < list.size(); i++) {
-            if (keywords.remove(list.get(i)) && keywords.isEmpty()) {
-                return i;
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
     @EpiTest(testDataFile = "smallest_subarray_covering_set.tsv")
     public static int findSmallestSubarrayCoveringSetWrapper(TimedExecutor executor,
                                                              List<String> list,
@@ -90,18 +90,18 @@ public final class SmallestSubarrayCoveringSet {
     }
 
     @EpiTest(testDataFile = "smallest_subarray_covering_set.tsv")
-    public static int findSmallestSubarrayCoveringSetWrapper2(TimedExecutor executor,
-                                                              List<String> list,
-                                                              Set<String> keywords) throws Exception {
-        final Subarray result = executor.run(() -> findSmallestSubarrayCoveringSet2(list, keywords));
+    public static int findSmallestSubarrayCoveringSetWrapperSW(TimedExecutor executor,
+                                                               List<String> list,
+                                                               Set<String> keywords) throws Exception {
+        final Subarray result = executor.run(() -> findSmallestSubarrayCoveringSetSW(list, keywords));
         return verify(list, keywords, result);
     }
 
     @EpiTest(testDataFile = "smallest_subarray_covering_set.tsv")
-    public static int findSmallestSubarrayCoveringSetWrapper3(TimedExecutor executor,
-                                                              List<String> list,
-                                                              Set<String> keywords) throws Exception {
-        final Subarray result = executor.run(() -> findSmallestSubarrayCoveringSet3(list.iterator(), keywords));
+    public static int findSmallestSubarrayCoveringSetWrapperLHM(TimedExecutor executor,
+                                                                List<String> list,
+                                                                Set<String> keywords) throws Exception {
+        final Subarray result = executor.run(() -> findSmallestSubarrayCoveringSetLHM(list, keywords));
         return verify(list, keywords, result);
     }
 

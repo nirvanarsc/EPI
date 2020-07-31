@@ -12,24 +12,22 @@ import epi.utils.TestRunner;
 
 public final class LowestCommonAncestorCloseAncestor {
 
-    public static BinaryTree<Integer> LCA(BinaryTree<Integer> node0, BinaryTree<Integer> node1) {
-        final Set<BinaryTree<Integer>> set = new HashSet<>();
-        while (node0 != null || node1 != null) {
+    public static BinaryTree<Integer> lca(BinaryTree<Integer> node0, BinaryTree<Integer> node1) {
+        final Set<BinaryTree<Integer>> seen0 = new HashSet<>();
+        final Set<BinaryTree<Integer>> seen1 = new HashSet<>();
+        while (true) {
+            if (node0 == node1) { return node0; }
+            if (seen0.contains(node1)) { return node1; }
+            if (seen1.contains(node0)) { return node0; }
             if (node0 != null) {
-                if (!set.add(node0)) {
-                    return node0;
-                }
+                seen0.add(node0);
                 node0 = node0.parent;
             }
             if (node1 != null) {
-                if (!set.add(node1)) {
-                    return node1;
-                }
+                seen1.add(node1);
                 node1 = node1.parent;
             }
         }
-
-        throw new IllegalArgumentException("nodes are not in the same tree");
     }
 
     @EpiTest(testDataFile = "lowest_common_ancestor.tsv")
@@ -39,7 +37,7 @@ public final class LowestCommonAncestorCloseAncestor {
                                  Integer key1) throws Exception {
         final BinaryTree<Integer> node0 = BinaryTreeUtils.mustFindNode(tree, key0);
         final BinaryTree<Integer> node1 = BinaryTreeUtils.mustFindNode(tree, key1);
-        final BinaryTree<Integer> result = executor.run(() -> LCA(node0, node1));
+        final BinaryTree<Integer> result = executor.run(() -> lca(node0, node1));
 
         if (result == null) {
             throw new TestFailure("Result can not be null");
