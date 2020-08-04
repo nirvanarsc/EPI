@@ -1,6 +1,6 @@
 package epi.Chapter14;
 
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 
 import epi.test_framework.EpiTest;
@@ -29,8 +29,8 @@ public final class IsArrayDominated {
     }
 
     public static boolean validPlacementExists(Team team0, Team team1) {
-        team0.players.sort(Comparator.naturalOrder());
-        team1.players.sort(Comparator.naturalOrder());
+        Collections.sort(team0.players);
+        Collections.sort(team1.players);
         for (int i = 0; i < team0.players.size(); i++) {
             if (team1.players.get(i).height <= team0.players.get(i).height) {
                 return false;

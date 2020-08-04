@@ -1,10 +1,8 @@
 package epi.Chapter14;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiPredicate;
 
 import epi.test_framework.EpiTest;
@@ -44,11 +42,8 @@ public final class RemoveDuplicates {
 
         @Override
         public int compareTo(Name name) {
-            final int cmpFirst = firstName.compareTo(name.firstName);
-            if (cmpFirst != 0) {
-                return cmpFirst;
-            }
-            return lastName.compareTo(name.lastName);
+            return firstName.equals(name.firstName) ? lastName.compareTo(name.lastName)
+                                                    : firstName.compareTo(name.firstName);
         }
 
         @Override
@@ -58,20 +53,6 @@ public final class RemoveDuplicates {
     }
 
     public static void eliminateDuplicate(List<Name> names) {
-        final Set<String> map = new HashSet<>();
-        for (int i = 0; i < names.size(); i++) {
-            if (map.contains(names.get(i).firstName)) {
-                names.set(i, null);
-            } else {
-                map.add(names.get(i).firstName);
-            }
-        }
-        while (true) {
-            if (!names.remove(null)) { break; }
-        }
-    }
-
-    public static void eliminateDuplicate2(List<Name> names) {
         Collections.sort(names);
         int write = 1;
         for (int i = 1; i < names.size(); i++) {
@@ -85,12 +66,6 @@ public final class RemoveDuplicates {
     @EpiTest(testDataFile = "remove_duplicates.tsv")
     public static List<Name> eliminateDuplicateWrapper(List<Name> names) {
         eliminateDuplicate(names);
-        return names;
-    }
-
-    @EpiTest(testDataFile = "remove_duplicates.tsv")
-    public static List<Name> eliminateDuplicateWrapper2(List<Name> names) {
-        eliminateDuplicate2(names);
         return names;
     }
 

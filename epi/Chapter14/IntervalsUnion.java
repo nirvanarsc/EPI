@@ -1,7 +1,6 @@
 package epi.Chapter14;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import epi.test_framework.EpiTest;
@@ -11,49 +10,78 @@ import epi.utils.TestRunner;
 
 public final class IntervalsUnion {
 
-    public static class Interval {
+    private static class Interval {
         public Endpoint left = new Endpoint();
         public Endpoint right = new Endpoint();
 
-        private static class Endpoint {
-            public boolean isClosed;
-            public int val;
-        }
+        Interval() { }
 
-        @Override
-        public String toString() {
-            return left.val + " " + right.val;
+        Interval(Endpoint left, Endpoint right) {
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    private static class Endpoint {
+        public boolean isClosed;
+        public int val;
+
+        Endpoint() { }
+
+        Endpoint(boolean isClosed, int val) {
+            this.isClosed = isClosed;
+            this.val = val;
+        }
+    }
+
+    private static class Point {
+        boolean isClosed;
+        boolean isStart;
+        int val;
+
+        Point(boolean isClosed, boolean isStart, int val) {
+            this.isClosed = isClosed;
+            this.isStart = isStart;
+            this.val = val;
         }
     }
 
     public static List<Interval> unionOfIntervals(List<Interval> intervals) {
-        final Comparator<Interval> byValue = Comparator.comparingInt(a -> a.left.val);
-        final Comparator<Interval> byRange = (a, b) -> Boolean.compare(b.left.isClosed, a.left.isClosed);
-        intervals.sort(byValue.thenComparing(byRange));
-        final List<Interval> res = new ArrayList<>();
-        Interval curr = intervals.get(0);
-        for (int i = 1; i < intervals.size(); i++) {
-            if (curr.right.val == intervals.get(i).left.val) {
-                if (curr.right.isClosed || intervals.get(i).left.isClosed) {
-                    curr.right = intervals.get(i).right;
+        final List<Point> lineSweep = new ArrayList<>();
+        for (Interval interval : intervals) {
+            lineSweep.add(new Point(interval.left.isClosed, true, interval.left.val));
+            lineSweep.add(new Point(interval.right.isClosed, false, interval.right.val));
+        }
+        lineSweep.sort((a, b) -> {
+            if (a.val == b.val) {
+                if (a.isStart && b.isStart) {
+                    return Boolean.compare(b.isClosed, a.isClosed);
+                } else if (!a.isStart && !b.isStart) {
+                    return Boolean.compare(a.isClosed, b.isClosed);
+                } else if (!a.isClosed && !b.isClosed) {
+                    return Boolean.compare(a.isStart, b.isStart);
                 } else {
-                    res.add(curr);
-                    curr = intervals.get(i);
+                    return Boolean.compare(b.isStart, a.isStart);
                 }
-            } else if (curr.right.val > intervals.get(i).left.val) {
-                if (curr.right.val < intervals.get(i).right.val
-                    || curr.right.val == intervals.get(i).right.val && intervals.get(i).right.isClosed) {
-                    curr.right = intervals.get(i).right;
-                }
-            } else {
-                res.add(curr);
-                curr = intervals.get(i);
+            }
+            return Integer.compare(a.val, b.val);
+        });
+        final List<Interval> res = new ArrayList<>();
+        int currOpen = 0;
+        Endpoint currL = null;
+        for (Point p : lineSweep) {
+            currOpen += p.isStart ? 1 : -1;
+            if (currL == null) {
+                currL = new Endpoint(p.isClosed, p.val);
+            }
+            if (currOpen == 0) {
+                res.add(new Interval(currL, new Endpoint(p.isClosed, p.val)));
+                currL = null;
             }
         }
-        res.add(curr);
         return res;
     }
-
+    
     @EpiUserType(ctorParams = { int.class, boolean.class, int.class, boolean.class })
     public static class FlatInterval {
         int leftVal;

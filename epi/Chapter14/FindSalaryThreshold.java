@@ -22,6 +22,27 @@ public final class FindSalaryThreshold {
         return -1.0;
     }
 
+    private static final double EPSILON = 1e-7;
+
+    @EpiTest(testDataFile = "find_salary_threshold.tsv")
+    public static double findSalaryCapBS(int targetPayroll, List<Integer> currentSalaries) {
+        double lo = 0;
+        double hi = 1e9;
+        while (hi - lo > EPSILON) {
+            final double mid = 0.5 * (lo + hi);
+            double payroll = 0;
+            for (double salary : currentSalaries) {
+                payroll += Math.min(salary, mid);
+            }
+            if (Double.compare(payroll, targetPayroll) == -1) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+        return Double.compare(lo, 1e9) == 0 ? -1 : lo;
+    }
+
     public static void main(String[] args) {
         TestRunner.run(args);
     }

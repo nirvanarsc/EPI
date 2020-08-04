@@ -5,49 +5,29 @@ import epi.ListNode;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
+@SuppressWarnings({ "MethodParameterNamingConvention", "ConstantConditions" })
 public final class SortList {
 
     @EpiTest(testDataFile = "sort_list.tsv")
-    public static ListNode<Integer> stableSortList(ListNode<Integer> list) {
-        if (list == null || list.next == null) {
-            return list;
+    public static ListNode<Integer> stableSortList(ListNode<Integer> L) {
+        if (L == null || L.next == null) {
+            return L;
         }
+        ListNode<Integer> slow = new ListNode<>(-1, L);
+        ListNode<Integer> fast = new ListNode<>(-1, L);
 
-        ListNode<Integer> preSlow = new ListNode<>(0, list), fast = list, slow = list;
         while (fast != null && fast.next != null) {
-            fast = fast.next.next;
             slow = slow.next;
-            preSlow = preSlow.next;
+            fast = fast.next.next;
         }
-        preSlow.next = null; // Splits the list into two equal-sized lists.
 
-        list = stableSortList(list);
-        slow = stableSortList(slow);
+        final ListNode<Integer> temp = slow.next;
+        slow.next = null;
 
-        return SortedListsMerge.mergeTwoSortedLists(list, slow);
-    }
+        final ListNode<Integer> left = stableSortList(L);
+        final ListNode<Integer> right = stableSortList(temp);
 
-    @EpiTest(testDataFile = "sort_list.tsv")
-    public static ListNode<Integer> stableSortList2(ListNode<Integer> list) {
-        final ListNode<Integer> dummyHead = new ListNode<>(0, list);
-        ListNode<Integer> iter = list;
-
-        while (iter != null && iter.next != null) {
-            if (iter.data > iter.next.data) {
-                final ListNode<Integer> target = iter.next;
-                ListNode<Integer> pre = dummyHead;
-                while (pre.next.data < target.data) {
-                    pre = pre.next;
-                }
-                final ListNode<Integer> temp = pre.next;
-                pre.next = target;
-                iter.next = target.next;
-                target.next = temp;
-            } else {
-                iter = iter.next;
-            }
-        }
-        return dummyHead.next;
+        return SortedListsMerge.mergeTwoSortedLists(left, right);
     }
 
     public static void main(String[] args) {

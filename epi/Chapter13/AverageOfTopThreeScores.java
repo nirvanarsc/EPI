@@ -12,35 +12,23 @@ public final class AverageOfTopThreeScores {
         while (nameScoreData.hasNext()) {
             final String name = (String) nameScoreData.next();
             final Integer score = (Integer) nameScoreData.next();
-            final PriorityQueue<Integer> scores = grades.computeIfAbsent(name, k -> new PriorityQueue<>());
-            scores.add(score);
-            if (scores.size() > 3) {
-                scores.poll();
+            grades.computeIfAbsent(name, k -> new PriorityQueue<>()).add(score);
+            if (grades.get(name).size() > 3) {
+                grades.get(name).poll();
             }
         }
-
         String topStudent = "";
-        int currentTopThreeScoresSum = 0;
+        int bestSum = 0;
         for (Map.Entry<String, PriorityQueue<Integer>> scores : grades.entrySet()) {
             if (scores.getValue().size() == 3) {
-                final int currentScoresSum = getTopThreeScoresSum(scores.getValue());
-                if (currentScoresSum > currentTopThreeScoresSum) {
-                    currentTopThreeScoresSum = currentScoresSum;
+                final int sum = scores.getValue().stream().mapToInt(Integer::intValue).sum();
+                if (sum > bestSum) {
+                    bestSum = sum;
                     topStudent = scores.getKey();
                 }
             }
         }
-
         return topStudent;
-    }
-
-    private static int getTopThreeScoresSum(PriorityQueue<Integer> scores) {
-        final Iterator<Integer> it = scores.iterator();
-        int result = 0;
-        while (it.hasNext()) {
-            result += it.next();
-        }
-        return result;
     }
 
     private AverageOfTopThreeScores() {}

@@ -20,14 +20,8 @@ public final class LongestContainedInterval {
             int upperBound = next + 1;
             int lowerBound = next - 1;
             unprocessed.remove(next);
-            while (unprocessed.contains(lowerBound)) {
-                unprocessed.remove(lowerBound);
-                lowerBound--;
-            }
-            while (unprocessed.contains(upperBound)) {
-                unprocessed.remove(upperBound);
-                upperBound++;
-            }
+            while (unprocessed.remove(lowerBound)) { lowerBound--; }
+            while (unprocessed.remove(upperBound)) { upperBound++; }
             res = Math.max(res, upperBound - lowerBound - 1);
         }
         return res;
@@ -82,11 +76,12 @@ public final class LongestContainedInterval {
     @EpiTest(testDataFile = "longest_contained_interval.tsv")
     public static int longestContainedRangeUF(List<Integer> list) {
         final Map<Integer, Integer> map = new HashMap<>();
-        final tt.UnionFind uf = new tt.UnionFind(list.size());
+        final UnionFind uf = new UnionFind(list.size());
         for (int i = 0; i < list.size(); i++) {
             final int curr = list.get(i);
-            if (map.containsKey(curr)) { continue; }
-
+            if (map.containsKey(curr)) {
+                continue;
+            }
             uf.union(i, map.getOrDefault(curr - 1, i));
             uf.union(i, map.getOrDefault(curr + 1, i));
             map.put(curr, i);

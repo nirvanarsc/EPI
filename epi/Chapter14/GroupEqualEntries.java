@@ -1,12 +1,11 @@
 package epi.Chapter14;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -54,35 +53,39 @@ public final class GroupEqualEntries {
     }
 
     public static void groupByAge(List<Person> people) {
-        final List<Person> byAge = people.stream()
-                                         .collect(Collectors.groupingBy(person -> person.age))
-                                         .values()
-                                         .stream()
-                                         .flatMap(Collection::stream)
-                                         .collect(Collectors.toList());
+        final Map<Integer, List<Person>> map = new HashMap<>();
+        for (Person p : people) {
+            map.computeIfAbsent(p.age, v -> new ArrayList<>()).add(p);
+        }
         people.clear();
-        people.addAll(byAge);
+        for (Map.Entry<Integer, List<Person>> e : map.entrySet()) {
+            people.addAll(e.getValue());
+        }
     }
 
-    public static void groupByAge2(List<Person> people) {
+    public static void groupByAgeCS(List<Person> people) {
         final Map<Integer, Integer> ageToCount = new HashMap<>();
         final Map<Integer, Integer> ageToOffset = new HashMap<>();
         int offset = 0;
         for (Person p : people) {
             ageToCount.merge(p.age, 1, Integer::sum);
         }
-        for (Entry<Integer, Integer> kc : ageToCount.entrySet()) {
-            ageToOffset.put(kc.getKey(), offset);
-            offset += kc.getValue();
+        for (Map.Entry<Integer, Integer> e : ageToCount.entrySet()) {
+            ageToOffset.put(e.getKey(), offset);
+            offset += e.getValue();
         }
         while (!ageToOffset.isEmpty()) {
-            final Entry<Integer, Integer> from = ageToOffset.entrySet().iterator().next();
+            final Map.Entry<Integer, Integer> from = ageToOffset.entrySet().iterator().next();
             final Integer toAge = people.get(from.getValue()).age;
             final Integer swapTo = ageToOffset.get(toAge);
             Collections.swap(people, from.getValue(), swapTo);
             // Use ageToCount to see when we are finished with a particular age.
-            final Integer count = ageToCount.compute(toAge, (k, v) -> v - 1);
-            ageToOffset.compute(toAge, (k, v) -> count > 0 ? swapTo + 1 : null);
+            final int count = ageToCount.merge(toAge, -1, Integer::sum);
+            if (count > 0) {
+                ageToOffset.put(toAge, swapTo + 1);
+            } else {
+                ageToOffset.remove(toAge);
+            }
         }
     }
 
@@ -98,12 +101,12 @@ public final class GroupEqualEntries {
     }
 
     @EpiTest(testDataFile = "group_equal_entries.tsv")
-    public static void groupByAgeWrapper2(TimedExecutor executor, List<Person> people) throws Exception {
+    public static void groupByAgeWrapperCS(TimedExecutor executor, List<Person> people) throws Exception {
         if (people.isEmpty()) {
             return;
         }
         final Map<Person, Long> values = buildMultiset(people);
-        executor.run(() -> groupByAge2(people));
+        executor.run(() -> groupByAgeCS(people));
         final Map<Person, Long> newValues = buildMultiset(people);
         verify(people, values, newValues);
     }

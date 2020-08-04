@@ -1,14 +1,13 @@
 package epi.Chapter14;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.utils.TestRunner;
 
+@SuppressWarnings("MethodParameterNamingConvention")
 public final class CalendarRendering {
 
     @EpiUserType(ctorParams = { int.class, int.class })
@@ -21,7 +20,7 @@ public final class CalendarRendering {
         }
     }
 
-    private static class Endpoint implements Comparable<Endpoint> {
+    private static class Endpoint {
         public int time;
         public boolean isStart;
 
@@ -29,48 +28,23 @@ public final class CalendarRendering {
             this.time = time;
             this.isStart = isStart;
         }
-
-        @Override
-        public int compareTo(Endpoint e) {
-            return time != e.time ? Integer.compare(time, e.time) : Boolean.compare(e.isStart, isStart);
-        }
-
-        @Override
-        public String toString() {
-            return time + " " + isStart;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof Endpoint)) { return false; }
-            return compareTo((Endpoint) o) == 0;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(time, isStart);
-        }
     }
 
     @EpiTest(testDataFile = "calendar_rendering.tsv")
-    public static int findMaxSimultaneousEvents(List<Event> events) {
-        final List<Endpoint> endpoints = new ArrayList<>();
-        for (Event e : events) {
-            endpoints.add(new Endpoint(e.start, true));
-            endpoints.add(new Endpoint(e.finish, false));
+    public static int findMaxSimultaneousEvents(List<Event> A) {
+        final List<Endpoint> points = new ArrayList<>();
+        for (Event e : A) {
+            points.add(new Endpoint(e.start, true));
+            points.add(new Endpoint(e.finish, false));
         }
-        Collections.sort(endpoints);
-        int curr = 0;
-        int res = Integer.MIN_VALUE;
-        for (Endpoint e : endpoints) {
-            if (e.isStart) {
-                curr++;
-                res = Math.max(curr, res);
-            } else {
-                curr--;
-            }
+        points.sort((a, b) -> a.time == b.time ? Boolean.compare(b.isStart, a.isStart)
+                                               : Integer.compare(a.time, b.time));
+        int max = 0, curr = 0;
+        for (Endpoint p : points) {
+            curr += p.isStart ? 1 : -1;
+            max = Math.max(max, curr);
         }
-        return res;
+        return max;
     }
 
     public static void main(String[] args) {

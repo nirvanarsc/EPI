@@ -12,11 +12,11 @@ public final class SmallestNonconstructibleValue {
     public static int smallestNonconstructibleValue(List<Integer> integers) {
         Collections.sort(integers);
         int maxConstructibleValue = 0;
-        for (int a : integers) {
-            if (a > maxConstructibleValue + 1) {
+        for (int num : integers) {
+            if (num > maxConstructibleValue + 1) {
                 break;
             }
-            maxConstructibleValue += a;
+            maxConstructibleValue += num;
         }
         return maxConstructibleValue + 1;
     }
