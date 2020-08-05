@@ -9,19 +9,11 @@ import epi.utils.TestRunner;
 
 public final class LowestCommonAncestorInBst {
 
-    // Input nodes are nonempty and the key at s is less than the one at b.
-    public static BstNode<Integer> findLCA(BstNode<Integer> tree,
-                                           BstNode<Integer> s,
-                                           BstNode<Integer> b) {
-        while (true) {
-            if (s.data <= tree.data && tree.data <= b.data) {
-                return tree;
-            } else if (s.data > tree.data && b.data > tree.data) {
-                tree = tree.right;
-            } else {
-                tree = tree.left;
-            }
+    public static BstNode<Integer> findLca(BstNode<Integer> tree, BstNode<Integer> s, BstNode<Integer> b) {
+        if (s.data <= tree.data && tree.data <= b.data) {
+            return tree;
         }
+        return s.data <= tree.data ? findLca(tree.left, s, b) : findLca(tree.right, s, b);
     }
 
     @EpiTest(testDataFile = "lowest_common_ancestor_in_bst.tsv")
@@ -31,7 +23,7 @@ public final class LowestCommonAncestorInBst {
                                  Integer key1) throws Exception {
         final BstNode<Integer> node0 = BinaryTreeUtils.mustFindNode(tree, key0);
         final BstNode<Integer> node1 = BinaryTreeUtils.mustFindNode(tree, key1);
-        final BstNode<Integer> result = executor.run(() -> findLCA(tree, node0, node1));
+        final BstNode<Integer> result = executor.run(() -> findLca(tree, node0, node1));
 
         if (result == null) {
             throw new TestFailure("Result can't be null");

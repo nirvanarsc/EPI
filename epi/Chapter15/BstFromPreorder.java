@@ -6,47 +6,28 @@ import epi.BstNode;
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
+@SuppressWarnings({ "ConstantConditions", "ReturnOfNull" })
 public final class BstFromPreorder {
 
-    private static Integer rootIdx;
+    static int idx;
 
     @EpiTest(testDataFile = "bst_from_preorder.tsv")
     public static BstNode<Integer> rebuildBSTFromPreorder(List<Integer> preorderSequence) {
-        if (preorderSequence.isEmpty()) {
+        idx = 0;
+        return dfs(preorderSequence, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private static BstNode<Integer> dfs(List<Integer> preorder, Integer lo, Integer hi) {
+        if (idx == preorder.size()) {
             return null;
         }
-        final Integer rootData = preorderSequence.get(0);
-        final BstNode<Integer> root = new BstNode<>(rootData);
-        int i = 1;
-        while (i < preorderSequence.size() && preorderSequence.get(i) < rootData) {
-            i++;
+        if (!(lo <= preorder.get(idx) && preorder.get(idx) <= hi)) {
+            return null;
         }
-
-        root.left = rebuildBSTFromPreorder(preorderSequence.subList(1, i));
-        root.right = rebuildBSTFromPreorder(preorderSequence.subList(i, preorderSequence.size()));
-
+        final BstNode<Integer> root = new BstNode<>(preorder.get(idx++));
+        root.left = dfs(preorder, lo, root.data);
+        root.right = dfs(preorder, root.data, hi);
         return root;
-    }
-
-    @EpiTest(testDataFile = "bst_from_preorder.tsv")
-    public static BstNode<Integer> rebuildBSTFromPreorder2(List<Integer> preorderSequence) {
-        rootIdx = 0;
-        return helper(preorderSequence, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
-
-    private static BstNode<Integer> helper(List<Integer> preorderSequence, Integer lower, Integer upper) {
-        if (rootIdx == preorderSequence.size()) {
-            return null;
-        }
-        final Integer root = preorderSequence.get(rootIdx);
-        if (root < lower || root > upper) {
-            return null;
-        }
-        rootIdx++;
-
-        final BstNode<Integer> leftSubtree = helper(preorderSequence, lower, root);
-        final BstNode<Integer> rightSubtree = helper(preorderSequence, root, upper);
-        return new BstNode<>(root, leftSubtree, rightSubtree);
     }
 
     public static void main(String[] args) {

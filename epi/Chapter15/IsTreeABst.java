@@ -1,7 +1,7 @@
 package epi.Chapter15;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 
 import epi.BinaryTreeNode;
@@ -11,52 +11,47 @@ import epi.utils.TestRunner;
 
 public final class IsTreeABst {
 
-    static class QueueEntry {
-        public BinaryTreeNode<Integer> treeNode;
-        public Integer left, right;
-
-        QueueEntry(BinaryTreeNode<Integer> treeNode, Integer left, Integer right) {
-            this.treeNode = treeNode;
-            this.left = left;
-            this.right = right;
-        }
-    }
-
     @EpiTest(testDataFile = "is_tree_a_bst.tsv")
     public static boolean isBinaryTreeBST(BinaryTreeNode<Integer> tree) {
-        return validateBST(tree, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        return dfs(tree, null, null);
     }
 
-    public static boolean validateBST(BinaryTreeNode<Integer> tree, Integer left, Integer right) {
+    private static boolean dfs(BinaryTreeNode<Integer> tree, Integer lo, Integer hi) {
         if (tree == null) {
             return true;
         }
+        return (lo == null || lo <= tree.data)
+               && (hi == null || tree.data <= hi)
+               && dfs(tree.left, lo, tree.data)
+               && dfs(tree.right, tree.data, hi);
+    }
 
-        if (tree.data < left || tree.data > right) {
-            return false;
+    private static class Pair {
+        BinaryTreeNode<Integer> node;
+        Integer lo, hi;
+
+        Pair(BinaryTreeNode<Integer> node, Integer lo, Integer hi) {
+            this.node = node;
+            this.lo = lo;
+            this.hi = hi;
         }
-
-        return validateBST(tree.left, left, tree.data) && validateBST(tree.right, tree.data, right);
     }
 
     @EpiTest(testDataFile = "is_tree_a_bst.tsv")
-    public static boolean isBinaryTreeBST_BFS(BinaryTreeNode<Integer> tree) {
-        final Deque<QueueEntry> queue = new LinkedList<>();
-        queue.add(new QueueEntry(tree, Integer.MIN_VALUE, Integer.MAX_VALUE));
-
-        QueueEntry curr;
-        while (!queue.isEmpty()) {
-            curr = queue.pollFirst();
-            if (curr.treeNode != null) {
-                if (curr.treeNode.data < curr.left || curr.treeNode.data > curr.right) {
-                    return false;
-                }
-
-                queue.addLast(new QueueEntry(curr.treeNode.left, curr.left, curr.treeNode.data));
-                queue.addLast(new QueueEntry(curr.treeNode.right, curr.treeNode.data, curr.right));
-            }
+    public static boolean isBinaryTreeBSTBFS(BinaryTreeNode<Integer> tree) {
+        final Deque<Pair> q = new ArrayDeque<>();
+        if (tree != null) {
+            q.offerLast(new Pair(tree, null, null));
         }
-
+        while (!q.isEmpty()) {
+            final Pair curr = q.removeFirst();
+            if ((curr.lo != null && curr.node.data < curr.lo)
+                || (curr.hi != null && curr.node.data > curr.hi)) {
+                return false;
+            }
+            if (curr.node.left != null) { q.offerLast(new Pair(curr.node.left, curr.lo, curr.node.data)); }
+            if (curr.node.right != null) { q.offerLast(new Pair(curr.node.right, curr.node.data, curr.hi)); }
+        }
         return true;
     }
 
