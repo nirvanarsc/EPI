@@ -9,16 +9,22 @@ import epi.test_framework.TestUtils;
 import epi.test_framework.TimedExecutor;
 import epi.utils.TestRunner;
 
+@SuppressWarnings({ "ReturnOfNull", "ConstantConditions" })
 public final class BstFromSortedArray {
 
-    public static BstNode<Integer> buildMinHeightBSTFromSortedArray(List<Integer> integers) {
-        if (integers.isEmpty()) {
+    public static BstNode<Integer> buildMinHeightBSTFromSortedArray(List<Integer> A) {
+        return dfs(A, 0, A.size() - 1);
+    }
+
+    private static BstNode<Integer> dfs(List<Integer> list, int lo, int hi) {
+        if (lo > hi) {
             return null;
         }
-        final int mid = integers.size() / 2;
-        return new BstNode<>(integers.get(mid),
-                             buildMinHeightBSTFromSortedArray(integers.subList(0, mid)),
-                             buildMinHeightBSTFromSortedArray(integers.subList(mid + 1, integers.size())));
+        final int mid = lo + hi >>> 1;
+        final BstNode<Integer> root = new BstNode<>(list.get(mid));
+        root.left = dfs(list, lo, mid - 1);
+        root.right = dfs(list, mid + 1, hi);
+        return root;
     }
 
     @EpiTest(testDataFile = "bst_from_sorted_array.tsv")

@@ -5,30 +5,40 @@ import java.util.List;
 
 import epi.BstNode;
 import epi.test_framework.EpiTest;
-import epi.utils.Interval;
+import epi.test_framework.EpiUserType;
 import epi.utils.TestRunner;
 
 public final class RangeLookupInBst {
 
+    @EpiUserType(ctorParams = { int.class, int.class })
+    public static class Interval {
+        public int left, right;
+
+        public Interval(int left, int right) {
+            this.left = left;
+            this.right = right;
+        }
+    }
+
     @EpiTest(testDataFile = "range_lookup_in_bst.tsv")
     public static List<Integer> rangeLookupInBst(BstNode<Integer> tree, Interval interval) {
-        final ArrayList<Integer> res = new ArrayList<>();
-        rangeLookupInBstHelper(tree, interval, res);
+        final List<Integer> res = new ArrayList<>();
+        dfs(tree, interval.left, interval.right, res);
         return res;
     }
 
-    public static void rangeLookupInBstHelper(BstNode<Integer> tree, Interval interval, List<Integer> result) {
+    private static void dfs(BstNode<Integer> tree, int lo, int hi, List<Integer> res) {
         if (tree == null) {
             return;
         }
-        if (interval.left <= tree.data && tree.data <= interval.right) {
-            rangeLookupInBstHelper(tree.left, interval, result);
-            result.add(tree.data);
-            rangeLookupInBstHelper(tree.right, interval, result);
-        } else if (interval.left > tree.data) {
-            rangeLookupInBstHelper(tree.right, interval, result);
-        } else {
-            rangeLookupInBstHelper(tree.left, interval, result);
+        if (lo <= tree.data && tree.data <= hi) {
+            dfs(tree.left, lo, hi, res);
+            res.add(tree.data);
+            dfs(tree.right, lo, hi, res);
+        } else if (tree.data < hi) {
+            dfs(tree.right, lo, hi, res);
+        } else if (tree.data > lo) {
+            dfs(tree.left, lo, hi, res);
         }
     }
 

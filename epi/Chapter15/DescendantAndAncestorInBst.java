@@ -8,42 +8,27 @@ import epi.utils.TestRunner;
 
 public final class DescendantAndAncestorInBst {
 
-    public static boolean pairIncludesAncestorAndDescendantOfM(BstNode<Integer> possibleAncOrDesc0,
-                                                               BstNode<Integer> possibleAncOrDesc1,
-                                                               BstNode<Integer> middle) {
-        BstNode<Integer> search0 = possibleAncOrDesc0, search1 = possibleAncOrDesc1;
+    public static boolean pairIncludesAncestorAndDescendantOfM(BstNode<Integer> node1,
+                                                               BstNode<Integer> node2,
+                                                               BstNode<Integer> mid) {
+        BstNode<Integer> search0 = node1, search1 = node2;
 
-        while (search0 != possibleAncOrDesc1 && search0 != middle
-               && search1 != possibleAncOrDesc0 && search1 != middle
+        while (search0 != node2 && search0 != mid
+               && search1 != node1 && search1 != mid
                && (search0 != null || search1 != null)) {
             if (search0 != null) {
-                search0 = search0.data > middle.data ? search0.left : search0.right;
+                search0 = search0.data > mid.data ? search0.left : search0.right;
             }
             if (search1 != null) {
-                search1 = search1.data > middle.data ? search1.left : search1.right;
+                search1 = search1.data > mid.data ? search1.left : search1.right;
             }
         }
 
-        if (search0 == possibleAncOrDesc1 || search1 == possibleAncOrDesc0
-            || (search0 != middle && search1 != middle)) {
+        if (search0 == node2 || search1 == node1 || (search0 != mid && search1 != mid)) {
             return false;
         }
 
-        return search0 == middle ? searchTarget(middle, possibleAncOrDesc1)
-                                 : searchTarget(middle, possibleAncOrDesc0);
-    }
-
-    // You've passed 931/959 tests (28 tests fail where arg2 == arg4 or arg3 == arg4, contrary to problem definition.
-    public static boolean pairIncludesAncestorAndDescendantOfM2(BstNode<Integer> possibleAncOrDesc0,
-                                                                BstNode<Integer> possibleAncOrDesc1,
-                                                                BstNode<Integer> middle) {
-        if (possibleAncOrDesc0 == middle || possibleAncOrDesc1 == middle) {
-            return false;
-        }
-        if (searchTarget(possibleAncOrDesc0, middle) && searchTarget(middle, possibleAncOrDesc1)) {
-            return true;
-        }
-        return searchTarget(possibleAncOrDesc1, middle) && searchTarget(middle, possibleAncOrDesc0);
+        return search0 == mid ? searchTarget(mid, node2) : searchTarget(mid, node1);
     }
 
     private static boolean searchTarget(BstNode<Integer> from, BstNode<Integer> target) {

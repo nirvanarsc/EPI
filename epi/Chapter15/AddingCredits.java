@@ -1,11 +1,11 @@
 package epi.Chapter15;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.Set;
+import java.util.TreeMap;
 
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
@@ -14,78 +14,43 @@ import epi.utils.TestRunner;
 
 public final class AddingCredits {
 
-    static class ClientData implements Comparable<ClientData> {
-        String id;
-        int credit;
-
-        ClientData(String id, int credit) {
-            this.id = id;
-            this.credit = credit;
-        }
-
-        @Override
-        public int compareTo(ClientData o) {
-            return Integer.compare(o.credit, credit);
-        }
-
-        @Override
-        public String toString() {
-            return id + ' ' + credit;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof ClientData)) { return false; }
-            return compareTo((ClientData) o) == 0;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, credit);
-        }
-    }
-
     public static class ClientsCreditsInfo {
-        static int globalCredit;
-        static NavigableSet<ClientData> clientData;
-        static Map<String, ClientData> ids;
-
-        ClientsCreditsInfo() {
-            globalCredit = 0;
-            clientData = new TreeSet<>();
-            ids = new HashMap<>();
-        }
+        TreeMap<Integer, Set<String>> max = new TreeMap<>();
+        Map<String, Integer> clients = new HashMap<>();
+        int offset;
 
         public void insert(String clientID, int c) {
             remove(clientID);
-            final ClientData item = new ClientData(clientID, c - globalCredit);
-            ids.put(clientID, item);
-            clientData.add(item);
+            max.computeIfAbsent(c, v -> new HashSet<>()).add(clientID);
+            clients.put(clientID, c - offset);
         }
 
         public boolean remove(String clientID) {
-            if (!ids.containsKey(clientID)) {
-                return false;
+            final Integer curr = clients.get(clientID);
+            if (curr != null) {
+                if (max.containsKey(curr)) {
+                    max.get(curr).remove(clientID);
+                    if (max.get(curr).isEmpty()) {
+                        max.remove(curr);
+                    }
+                }
             }
-            clientData.remove(ids.remove(clientID));
-            return true;
+            return clients.remove(clientID, curr);
         }
 
         public int lookup(String clientID) {
-            return ids.containsKey(clientID) ? ids.get(clientID).credit + globalCredit : -1;
+            if (!clients.containsKey(clientID)) {
+                return -1;
+            }
+            return offset + clients.get(clientID);
         }
 
         public void addAll(int credit) {
-            globalCredit += credit;
+            offset += credit;
         }
 
         public String max() {
-            return clientData.first().id;
-        }
-
-        @Override
-        public String toString() {
-            return clientData.toString();
+            return max.lastEntry().getValue().iterator().next();
         }
     }
 
