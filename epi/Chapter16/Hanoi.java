@@ -5,63 +5,72 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import epi.test_framework.EpiTest;
 import epi.test_framework.TestFailure;
-import epi.test_framework.TestFailure.PropertyName;
 import epi.test_framework.TimedExecutor;
 import epi.utils.TestRunner;
 
 public final class Hanoi {
 
+    private static final int NUM_PEGS = 3;
+
     public static List<List<Integer>> computeTowerHanoi(int numRings) {
-        final List<Deque<Integer>> pegs = generatePegs(0, numRings, 3);
-        final List<List<Integer>> result = new ArrayList<>();
-        hanoi(pegs, result, 0, 1, 2, numRings);
-        return result;
+        final List<List<Integer>> res = new ArrayList<>();
+        dfs(numRings, 0, 1, 2, res);
+        return res;
     }
 
-    private static void hanoi(List<Deque<Integer>> pegs, List<List<Integer>> res,
-                              int from, int buffer, int to, int n) {
+    private static void dfs(int n, int from, int buffer, int to, List<List<Integer>> res) {
         if (n == 0) {
             return;
         }
-        hanoi(pegs, res, from, to, buffer, n - 1);
-        pegs.get(to).addFirst(pegs.get(from).removeFirst());
+        dfs(n - 1, from, to, buffer, res);
         res.add(Arrays.asList(from, to));
-        hanoi(pegs, res, buffer, from, to, n - 1);
-    }
-
-    private static List<Deque<Integer>> generatePegs(int idx, int numRings, int numPegs) {
-        final List<Deque<Integer>> pegs = IntStream.range(0, numPegs)
-                                                   .mapToObj(i -> new LinkedList<Integer>())
-                                                   .collect(Collectors.toList());
-        for (int i = numRings; i >= 1; i--) {
-            pegs.get(idx).addFirst(i);
-        }
-        return pegs;
+        dfs(n - 1, buffer, from, to, res);
     }
 
     @EpiTest(testDataFile = "hanoi.tsv")
     public static void computeTowerHanoiWrapper(TimedExecutor executor, int numRings) throws Exception {
-        final List<Deque<Integer>> pegs = generatePegs(0, numRings, 3);
-        final List<List<Integer>> result = executor.run(() -> computeTowerHanoi(numRings));
+        final List<Deque<Integer>> pegs = new ArrayList<>();
+        for (int i = 0; i < NUM_PEGS; i++) {
+            pegs.add(new LinkedList<>());
+        }
+        for (int i = numRings; i >= 1; --i) {
+            pegs.get(0).addFirst(i);
+        }
+
+        final List<List<Integer>> result =
+                executor.run(() -> computeTowerHanoi(numRings));
 
         for (List<Integer> operation : result) {
             final int fromPeg = operation.get(0);
             final int toPeg = operation.get(1);
-            if (!pegs.get(toPeg).isEmpty() && pegs.get(fromPeg).getFirst() >= pegs.get(toPeg).getFirst()) {
-                throw new TestFailure("Illegal move")
-                        .withProperty(PropertyName.EXPLANATION, pegs.get(fromPeg).getFirst())
-                        .withProperty(PropertyName.EXPLANATION, pegs.get(toPeg).getFirst());
+            if (!pegs.get(toPeg).isEmpty() &&
+                pegs.get(fromPeg).getFirst() >= pegs.get(toPeg).getFirst()) {
+                throw new TestFailure("Illegal move from " + pegs.get(fromPeg).getFirst() +
+                                      " to " + pegs.get(toPeg).getFirst());
             }
             pegs.get(toPeg).addFirst(pegs.get(fromPeg).removeFirst());
         }
 
-        if (!pegs.equals(generatePegs(2, numRings, 3))) {
-            throw new TestFailure("Pegs are not placed in the right configuration");
+        final List<Deque<Integer>> expectedPegs1 = new ArrayList<>();
+        for (int i = 0; i < NUM_PEGS; i++) {
+            expectedPegs1.add(new LinkedList<>());
+        }
+        for (int i = numRings; i >= 1; --i) {
+            expectedPegs1.get(1).addFirst(i);
+        }
+
+        final List<Deque<Integer>> expectedPegs2 = new ArrayList<>();
+        for (int i = 0; i < NUM_PEGS; i++) {
+            expectedPegs2.add(new LinkedList<>());
+        }
+        for (int i = numRings; i >= 1; --i) {
+            expectedPegs2.get(2).addFirst(i);
+        }
+        if (!pegs.equals(expectedPegs1) && !pegs.equals(expectedPegs2)) {
+            throw new TestFailure("Pegs doesn't place in the right configuration");
         }
     }
 

@@ -13,19 +13,19 @@ public final class Combinations {
     @EpiTest(testDataFile = "combinations.tsv")
     public static List<List<Integer>> combinations(int n, int k) {
         final List<List<Integer>> res = new ArrayList<>();
-        solve(1, n, k, new ArrayList<>(), res);
+        dfs(1, n, k, new ArrayList<>(), res);
         return res;
     }
 
-    private static void solve(int start, int n, int k, List<Integer> curr, List<List<Integer>> res) {
-        if (curr.size() == k) {
+    private static void dfs(int start, int n, int k, List<Integer> curr, List<List<Integer>> res) {
+        if (k == 0) {
             res.add(new ArrayList<>(curr));
-        } else {
-            for (int i = start; i <= n; i++) {
-                curr.add(i);
-                solve(i + 1, n, k, curr, res);
-                curr.remove(curr.size() - 1);
-            }
+            return;
+        }
+        for (int i = start; i <= n - k + 1; i++) {
+            curr.add(i);
+            dfs(i + 1, n, k - 1, curr, res);
+            curr.remove(curr.size() - 1);
         }
     }
 

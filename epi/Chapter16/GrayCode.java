@@ -14,53 +14,20 @@ import epi.utils.TestRunner;
 public final class GrayCode {
 
     public static List<Integer> grayCode(int numBits) {
-        if (numBits == 0) {
-            return new ArrayList<>(Collections.singletonList(0));
-        }
-
-        final List<Integer> integers = grayCode(numBits - 1);
-        for (int i = integers.size() - 1; i >= 0; i--) {
-            integers.add(integers.get(i) | (1 << numBits - 1));
-        }
-        return integers;
-    }
-
-    public static List<Integer> grayCode2(int numBits) {
-        final List<Integer> result = new ArrayList<>(Collections.singletonList(0));
-        directedGrayCode(numBits, new HashSet<>(result), result);
-        return result;
-    }
-
-    private static boolean directedGrayCode(int numBits, Set<Integer> history, List<Integer> result) {
-        if (result.size() == (1 << numBits)) {
-            return differsByOneBit(result.get(0), result.get(result.size() - 1));
-
-        }
+        final List<Integer> res = new ArrayList<>(Collections.singletonList(0));
         for (int i = 0; i < numBits; i++) {
-            final int previousCode = result.get(result.size() - 1);
-            final int candidateNextCode = previousCode ^ (1 << i);
-            if (!history.contains(candidateNextCode)) {
-                history.add(candidateNextCode);
-                result.add(candidateNextCode);
-                if (directedGrayCode(numBits, history, result)) {
-                    return true;
-                }
-                history.remove(candidateNextCode);
-                result.remove(result.size() - 1);
+            final List<Integer> reversed = new ArrayList<>(res);
+            Collections.reverse(reversed);
+            for (int rev : reversed) {
+                res.add(1 << i | rev);
             }
         }
-        return false;
+        return res;
     }
 
     @EpiTest(testDataFile = "gray_code.tsv")
     public static void grayCodeWrapper(TimedExecutor executor, int numBits) throws Exception {
         final List<Integer> result = executor.run(() -> grayCode(numBits));
-        verifyGrayCode(numBits, result);
-    }
-
-    @EpiTest(testDataFile = "gray_code.tsv")
-    public static void grayCodeWrapper2(TimedExecutor executor, int numBits) throws Exception {
-        final List<Integer> result = executor.run(() -> grayCode2(numBits));
         verifyGrayCode(numBits, result);
     }
 

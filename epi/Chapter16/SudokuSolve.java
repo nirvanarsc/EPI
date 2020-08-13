@@ -14,28 +14,23 @@ import epi.utils.TestRunner;
 public final class SudokuSolve {
 
     public static boolean solveSudoku(List<List<Integer>> partialAssignment) {
-        return compute(0, 0, partialAssignment);
-    }
-
-    private static boolean compute(int i, int j, List<List<Integer>> assignment) {
-        if (i == SUDOKU_SIZE) {
-            i %= SUDOKU_SIZE;
-            if (++j == SUDOKU_SIZE) {
-                return true;
-            }
+        if (partialAssignment.stream().noneMatch(row -> row.stream().anyMatch(cell -> cell == 0))) {
+            return true;
         }
-
-        if (assignment.get(i).get(j) != 0) {
-            return compute(i + 1, j, assignment);
-        }
-
-        for (int k = 1; k <= SUDOKU_SIZE; k++) {
-            if (SudokuValidator.isAssignmentValid(k, i, j, assignment)) {
-                assignment.get(i).set(j, k);
-                if (compute(i + 1, j, assignment)) {
-                    return true;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (partialAssignment.get(i).get(j) == 0) {
+                    for (int k = 1; k <= 9; k++) {
+                        if (SudokuValidator.isAssignmentValid(k, i, j, partialAssignment)) {
+                            partialAssignment.get(i).set(j, k);
+                            if (solveSudoku(partialAssignment)) {
+                                return true;
+                            }
+                        }
+                    }
+                    partialAssignment.get(i).set(j, 0);
+                    return false;
                 }
-                assignment.get(i).set(j, 0);
             }
         }
         return false;

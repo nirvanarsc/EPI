@@ -1,6 +1,7 @@
 package epi.Chapter16;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 
@@ -28,12 +29,14 @@ public final class PowerSet {
     }
 
     @EpiTest(testDataFile = "power_set.tsv")
-    public static List<List<Integer>> generatePowerSet2(List<Integer> inputSet) {
+    public static List<List<Integer>> generatePowerSetLSB(List<Integer> inputSet) {
         final List<List<Integer>> res = new ArrayList<>();
         for (int i = 0; i < 1 << inputSet.size(); i++) {
             final List<Integer> curr = new ArrayList<>();
-            for (int bitArray = i; bitArray != 0; bitArray &= bitArray - 1) {
-                curr.add(inputSet.get((int) (Math.log(bitArray & -bitArray) / LOG_2)));
+            int word = i;
+            while (word > 0) {
+                curr.add(inputSet.get((int) (Math.log(lsb(word)) / LOG_2)));
+                word -= lsb(word);
             }
             res.add(curr);
         }
@@ -41,26 +44,30 @@ public final class PowerSet {
     }
 
     @EpiTest(testDataFile = "power_set.tsv")
-    public static List<List<Integer>> generatePowerSet3(List<Integer> inputSet) {
+    public static List<List<Integer>> generatePowerSetDFS(List<Integer> inputSet) {
+        Collections.sort(inputSet);
         final List<List<Integer>> powerSet = new ArrayList<>();
-        directedPowerSet(0, inputSet, new ArrayList<>(), powerSet);
+        dfs(0, inputSet, new ArrayList<>(), powerSet);
         return powerSet;
     }
 
-    private static void directedPowerSet(int toBeSelected,
-                                         List<Integer> inputSet,
-                                         List<Integer> selectedSoFar,
-                                         List<List<Integer>> powerSet) {
-        if (toBeSelected == inputSet.size()) {
-            powerSet.add(new ArrayList<>(selectedSoFar));
+    private static void dfs(int start, List<Integer> input, List<Integer> curr, List<List<Integer>> res) {
+        if (start == input.size()) {
+            res.add(new ArrayList<>(curr));
             return;
         }
-        // Generate all subsets that contain inputSet[toBeSelected].
-        selectedSoFar.add(inputSet.get(toBeSelected));
-        directedPowerSet(toBeSelected + 1, inputSet, selectedSoFar, powerSet);
-        // Generate all subsets that do not contain inputSet[toBeSelected].
-        selectedSoFar.remove(selectedSoFar.size() - 1);
-        directedPowerSet(toBeSelected + 1, inputSet, selectedSoFar, powerSet);
+        res.add(new ArrayList<>(curr));
+        for (int i = start; i < input.size(); i++) {
+            // duplicates
+            if (i > start && input.get(i).equals(input.get(i - 1))) { continue; }
+            curr.add(input.get(i));
+            dfs(i + 1, input, curr, res);
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    private static int lsb(int i) {
+        return i & -i;  // zeroes all the bits except the least significant one
     }
 
     @EpiTestComparator

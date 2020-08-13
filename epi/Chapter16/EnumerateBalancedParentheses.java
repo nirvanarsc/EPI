@@ -13,20 +13,24 @@ public final class EnumerateBalancedParentheses {
     @EpiTest(testDataFile = "enumerate_balanced_parentheses.tsv")
     public static List<String> generateBalancedParentheses(int numPairs) {
         final List<String> res = new ArrayList<>();
-        compute("", numPairs, numPairs, res);
+        dfs(numPairs * 2, numPairs, numPairs, new StringBuilder(), res);
         return res;
     }
 
-    private static void compute(String s, int left, int right, List<String> res) {
-        if (left == 0 && right == 0) {
-            res.add(s);
+    private static void dfs(int n, int open, int close, StringBuilder sb, List<String> res) {
+        if (sb.length() == n) {
+            res.add(new String(sb));
             return;
         }
-        if (left > 0) {
-            compute(s + '(', left - 1, right, res);
+        if (open > 0) {
+            sb.append('(');
+            dfs(n, open - 1, close, sb, res);
+            sb.deleteCharAt(sb.length() - 1);
         }
-        if (left < right) {
-            compute(s + ')', left, right - 1, res);
+        if (open < close) {
+            sb.append(')');
+            dfs(n, open, close - 1, sb, res);
+            sb.deleteCharAt(sb.length() - 1);
         }
     }
 

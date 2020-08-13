@@ -1,6 +1,7 @@
 package epi.Chapter16;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,16 +14,16 @@ import epi.utils.TestRunner;
 public final class EnumerateTrees {
 
     public static List<BinaryTreeNode<Integer>> generateAllBinaryTrees(int numNodes) {
-        final List<BinaryTreeNode<Integer>> res = new ArrayList<>();
         if (numNodes == 0) {
-            res.add(null);
+            return Collections.singletonList(null);
         }
+        final List<BinaryTreeNode<Integer>> res = new ArrayList<>();
         for (int i = 0; i < numNodes; i++) {
-            final List<BinaryTreeNode<Integer>> left = generateAllBinaryTrees(i);
-            final List<BinaryTreeNode<Integer>> right = generateAllBinaryTrees(numNodes - i - 1);
-            for (BinaryTreeNode<Integer> l : left) {
-                for (BinaryTreeNode<Integer> r : right) {
-                    res.add(new BinaryTreeNode<>(0, l, r));
+            final List<BinaryTreeNode<Integer>> l = generateAllBinaryTrees(i);
+            final List<BinaryTreeNode<Integer>> r = generateAllBinaryTrees(numNodes - i - 1);
+            for (BinaryTreeNode<Integer> left : l) {
+                for (BinaryTreeNode<Integer> right : r) {
+                    res.add(new BinaryTreeNode<>(1, left, right));
                 }
             }
         }

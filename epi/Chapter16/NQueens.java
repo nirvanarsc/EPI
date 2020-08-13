@@ -13,28 +13,27 @@ public final class NQueens {
     @EpiTest(testDataFile = "n_queens.tsv")
     public static List<List<Integer>> nQueens(int n) {
         final List<List<Integer>> res = new ArrayList<>();
-        solve(n, 0, new ArrayList<>(), res);
+        dfs(n, 0, res, new ArrayList<>());
         return res;
     }
 
-    private static void solve(int n, int row, List<Integer> placement, List<List<Integer>> res) {
+    private static void dfs(int n, int row, List<List<Integer>> res, List<Integer> curr) {
         if (row == n) {
-            res.add(new ArrayList<>(placement));
-        } else {
-            for (int col = 0; col < n; col++) {
-                placement.add(col);
-                if (isValid(row, placement)) {
-                    solve(n, row + 1, placement, res);
-                }
-                placement.remove(placement.size() - 1);
+            res.add(new ArrayList<>(curr));
+        }
+        for (int col = 0; col < n; col++) {
+            if (isValid(curr, row, col)) {
+                curr.add(col);
+                dfs(n, row + 1, res, curr);
+                curr.remove(curr.size() - 1);
             }
         }
     }
 
-    private static boolean isValid(int row, List<Integer> placement) {
-        for (int i = 0; i < row; i++) {
-            final int diff = Math.abs(placement.get(i) - placement.get(row));
-            if (diff == 0 || diff == row - i) {
+    private static boolean isValid(List<Integer> curr, int row, int col) {
+        for (int i = 1; i <= row; i++) {
+            final int prev = curr.get(row - i);
+            if (prev == col || prev == col - i || prev == col + i) {
                 return false;
             }
         }
