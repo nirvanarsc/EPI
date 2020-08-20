@@ -1,6 +1,5 @@
 package epi.Chapter17;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import epi.test_framework.EpiTest;
@@ -10,40 +9,34 @@ public final class MinimumWeightPathInATriangle {
 
     @EpiTest(testDataFile = "minimum_weight_path_in_a_triangle.tsv")
     public static int minimumPathTotal(List<List<Integer>> triangle) {
-        return recurse(0, 0, triangle, new int[triangle.size()][triangle.size()]);
+        return dfs(triangle, 0, 0, new Integer[triangle.size()][triangle.size()]);
     }
 
-    public static int recurse(int level, int idx, List<List<Integer>> triangle, int[][] dp) {
-        if (level == triangle.size()) {
+    private static int dfs(List<List<Integer>> triangle, int i, int j, Integer[][] dp) {
+        if (i == triangle.size()) {
             return 0;
         }
-
-        if (dp[level][idx] != 0) {
-            return dp[level][idx];
+        if (dp[i][j] != null) {
+            return dp[i][j];
         }
-
-        dp[level][idx] = triangle.get(level).get(idx) + Math.min(recurse(level + 1, idx, triangle, dp),
-                                                                 recurse(level + 1, idx + 1, triangle, dp));
-
-        return dp[level][idx];
+        final int left = dfs(triangle, i + 1, j, dp);
+        int right = (int) 1e9;
+        if (j < triangle.get(i).size()) {
+            right = dfs(triangle, i + 1, j + 1, dp);
+        }
+        return dp[i][j] = triangle.get(i).get(j) + Math.min(left, right);
     }
 
     @EpiTest(testDataFile = "minimum_weight_path_in_a_triangle.tsv")
     public static int minimumPathBottomUp(List<List<Integer>> triangle) {
-        if (triangle.isEmpty()) {
-            return 0;
-        }
-        final int n = triangle.size() - 1;
-        final List<Integer> list = new ArrayList<>(triangle.get(n));
-
-        for (int level = n - 1; level >= 0; level--) {
+        final int[] dp = new int[triangle.size() + 1];
+        for (int level = triangle.size() - 1; level >= 0; level--) {
             for (int i = 0; i < triangle.get(level).size(); i++) {
-                list.set(i, Math.min(list.get(i) + triangle.get(level).get(i),
-                                     list.get(i + 1) + triangle.get(level).get(i)));
+                final int val = triangle.get(level).get(i);
+                dp[i] = Math.min(dp[i] + val, dp[i + 1] + val);
             }
         }
-
-        return list.get(0);
+        return dp[0];
     }
 
     public static void main(String[] args) {

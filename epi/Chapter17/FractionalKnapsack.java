@@ -18,7 +18,7 @@ public final class FractionalKnapsack {
         items.add(new Item(3, 9));
         items.add(new Item(2, 4));
 
-        System.out.println(Knapsack.knapsackSpaceC(items, 6));
+        System.out.println(Knapsack.optimumSubjectToCapacityBottomUp(items, 6));
         System.out.println(fractionalKnapsack(items, 6));
     }
 
@@ -30,11 +30,9 @@ public final class FractionalKnapsack {
                 res += (capacity / i.weight) * i.value;
                 return res;
             }
-
             res += i.value;
             capacity -= i.weight;
         }
-
         return res;
     }
 

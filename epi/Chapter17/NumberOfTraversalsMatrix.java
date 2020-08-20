@@ -9,62 +9,31 @@ public final class NumberOfTraversalsMatrix {
 
     @EpiTest(testDataFile = "number_of_traversals_matrix.tsv")
     public static int numberOfWays(int n, int m) {
-        final int[][] dp = new int[n][m];
-
-        Arrays.fill(dp[0], 1);
-
-        for (int i = 0; i < n; i++) {
-            dp[i][0] = 1;
-        }
-
+        int[] row = new int[m];
+        Arrays.fill(row, 1);
         for (int i = 1; i < n; i++) {
-            for (int j = 1; j < m; j++) {
-                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            final int[] next = new int[m];
+            for (int j = 0; j < m; j++) {
+                next[j] = row[j] + ((j > 0) ? next[j - 1] : 0);
             }
+            row = next;
         }
-
-        return dp[n - 1][m - 1];
-    }
-
-    @EpiTest(testDataFile = "number_of_traversals_matrix.tsv")
-    public static int numberOfWaysSpace(int n, int m) {
-        if (n > m) {
-            return numberOfWaysSpace(m, n);
-        }
-
-        final int[][] dp = new int[n][2];
-        dp[0][0] = 1;
-        dp[0][1] = 1;
-        for (int i = 1; i < n; i++) {
-            dp[i][0] = 1;
-        }
-
-        for (int j = 1; j < m; j++) {
-            for (int i = 1; i < n; i++) {
-                dp[i][j % 2] = dp[i - 1][j % 2] + dp[i][(j - 1) % 2];
-            }
-        }
-
-        return dp[n - 1][(m - 1) % 2];
+        return row[m - 1];
     }
 
     @EpiTest(testDataFile = "number_of_traversals_matrix.tsv")
     public static int numWays(int n, int m) {
-        return calc(n - 1, m - 1, new int[n][m]);
+        return dfs(n - 1, m - 1, new Integer[n][m]);
     }
 
-    public static int calc(int n, int m, int[][] cache) {
+    public static int dfs(int n, int m, Integer[][] dp) {
         if (n == 0 || m == 0) {
             return 1;
         }
-
-        if (cache[n][m] != 0) {
-            return cache[n][m];
+        if (dp[n][m] != null) {
+            return dp[n][m];
         }
-
-        cache[n][m] = calc(n - 1, m, cache) + calc(n, m - 1, cache);
-
-        return cache[n][m];
+        return dp[n][m] = dfs(n - 1, m, dp) + dfs(n, m - 1, dp);
     }
 
     public static void main(String[] args) {

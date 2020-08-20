@@ -1,29 +1,12 @@
 package epi.Chapter17;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
 public final class LongestNondecreasingSubsequence {
-
-    static class Pair {
-        int length;
-        int index;
-
-        Pair(int length, int index) {
-            this.length = length;
-            this.index = index;
-        }
-
-        @Override
-        public String toString() {
-            return length + " " + index;
-        }
-    }
 
     @EpiTest(testDataFile = "longest_nondecreasing_subsequence.tsv")
     public static int longestNondecreasingSubsequenceLength(List<Integer> list) {
@@ -43,34 +26,30 @@ public final class LongestNondecreasingSubsequence {
     }
 
     @EpiTest(testDataFile = "longest_nondecreasing_subsequence.tsv")
-    public static int longestNondecreasingSubsequence(List<Integer> list) {
-        final Pair[] dp = new Pair[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            dp[i] = new Pair(1, 0);
-        }
-
-        Pair res = new Pair(1, 0);
-        int maxIndex = 0;
-        for (int i = 1; i < list.size(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (list.get(i) >= list.get(j) && dp[i].length < 1 + dp[j].length) {
-                    dp[i].length = 1 + dp[j].length;
-                    dp[i].index = j;
-                }
-            }
-            if (dp[i].length > res.length) {
-                res = dp[i];
-                maxIndex = i;
+    public static int longestNondecreasingSubsequenceLengthBS(List<Integer> list) {
+        final int[] dp = new int[list.size()];
+        int len = 0;
+        for (int num : list) {
+            final int index = binarySearch(dp, 0, len, num);
+            dp[index] = num;
+            if (index == len) {
+                len++;
             }
         }
+        return len;
+    }
 
-        final List<Integer> sequence = new ArrayList<>(Collections.singletonList(list.get(maxIndex)));
-        Pair copy = new Pair(res.length, res.index);
-        for (int i = 0; i < res.length - 1; i++) {
-            sequence.add(list.get(copy.index));
-            copy = dp[copy.index];
+    // find first element greater than target
+    public static int binarySearch(int[] nums, int lo, int hi, int target) {
+        while (lo < hi) {
+            final int mid = (lo + hi) >>> 1;
+            if (nums[mid] <= target) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
         }
-        return res.length;
+        return lo;
     }
 
     public static void main(String[] args) {

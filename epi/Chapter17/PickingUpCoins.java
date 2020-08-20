@@ -9,23 +9,19 @@ public final class PickingUpCoins {
 
     @EpiTest(testDataFile = "picking_up_coins.tsv")
     public static int pickUpCoins(List<Integer> coins) {
-        return recurse(0, coins.size() - 1, coins, new int[coins.size()][coins.size()]);
+        return dfs(coins, 0, coins.size() - 1, new Integer[coins.size()][coins.size()]);
     }
 
-    public static int recurse(int start, int end, List<Integer> coins, int[][] dp) {
-        if (start > end) {
+    private static int dfs(List<Integer> coins, int i, int j, Integer[][] dp) {
+        if (i > j) {
             return 0;
         }
-
-        if (dp[start][end] != 0) {
-            return dp[start][end];
+        if (dp[i][j] != null) {
+            return dp[i][j];
         }
-
-        dp[start][end] = Math.max(coins.get(start) + Math.min(recurse(start + 2, end, coins, dp),
-                                                              recurse(start + 1, end - 1, coins, dp)),
-                                  coins.get(end) + Math.min(recurse(start + 1, end - 1, coins, dp),
-                                                            recurse(start, end - 2, coins, dp)));
-        return dp[start][end];
+        final int left = coins.get(i) + Math.min(dfs(coins, i + 2, j, dp), dfs(coins, i + 1, j - 1, dp));
+        final int right = coins.get(j) + Math.min(dfs(coins, i, j - 2, dp), dfs(coins, i + 1, j - 1, dp));
+        return dp[i][j] = Math.max(left, right);
     }
 
     public static void main(String[] args) {

@@ -1,102 +1,47 @@
 package epi.Chapter17;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 import epi.test_framework.EpiTest;
 import epi.utils.TestRunner;
 
 public final class IsStringInMatrix {
 
+    private static final int[][] DIRS = { { 0, 1 }, { 1, 0 }, { -1, 0 }, { 0, -1 } };
+
     @EpiTest(testDataFile = "is_string_in_matrix.tsv")
-    public static boolean isPatternContainedInGrid1(List<List<Integer>> grid, List<Integer> pattern) {
+    public static boolean isPatternContainedInGrid(List<List<Integer>> grid, List<Integer> pattern) {
+        final Boolean[][][] dp = new Boolean[grid.size()][grid.get(0).size()][pattern.size()];
         for (int i = 0; i < grid.size(); i++) {
             for (int j = 0; j < grid.get(0).size(); j++) {
-                if (calc(0, i, j, grid, pattern)) {
+                if (dfs(grid, pattern, i, j, 0, dp)) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
-    public static boolean calc(int start, int i, int j, List<List<Integer>> grid, List<Integer> pattern) {
-        if (start == pattern.size()) {
+    private static boolean dfs(List<List<Integer>> grid, List<Integer> pattern, int i, int j, int idx,
+                               Boolean[][][] dp) {
+        if (idx == pattern.size()) {
             return true;
         }
-        if (i < 0 || i == grid.size() || j < 0 || j == grid.get(0).size()
-            || !grid.get(i).get(j).equals(pattern.get(start))) {
+        if (i < 0 || i == grid.size() || j < 0 || j == grid.get(0).size() ||
+            !grid.get(i).get(j).equals(pattern.get(idx))) {
             return false;
         }
-
-        return calc(start + 1, i - 1, j, grid, pattern) ||
-               calc(start + 1, i + 1, j, grid, pattern) ||
-               calc(start + 1, i, j - 1, grid, pattern) ||
-               calc(start + 1, i, j + 1, grid, pattern);
-    }
-
-    @EpiTest(testDataFile = "is_string_in_matrix.tsv")
-    public static boolean isPatternContainedInGrid2(List<List<Integer>> grid, List<Integer> pattern) {
-        for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid.get(0).size(); j++) {
-                if (calc(0, i, j, grid, pattern, new HashSet<>())) {
-                    return true;
-                }
+        if (dp[i][j][idx] != null) {
+            return dp[i][j][idx];
+        }
+        boolean res = false;
+        for (int[] dir : DIRS) {
+            if (dfs(grid, pattern, i + dir[0], j + dir[1], idx + 1, dp)) {
+                res = true;
+                break;
             }
         }
-
-        return false;
-    }
-
-    public static boolean calc(int start, int i, int j, List<List<Integer>> grid, List<Integer> pattern,
-                               Set<Attempt> visited) {
-        if (start == pattern.size()) {
-            return true;
-        }
-        if (i < 0 || i == grid.size() || j < 0 || j == grid.get(0).size()
-            || !grid.get(i).get(j).equals(pattern.get(start))
-            || visited.contains(new Attempt(start, i, j))) {
-            return false;
-        }
-
-        if (calc(start + 1, i - 1, j, grid, pattern, visited) ||
-            calc(start + 1, i + 1, j, grid, pattern, visited) ||
-            calc(start + 1, i, j - 1, grid, pattern, visited) ||
-            calc(start + 1, i, j + 1, grid, pattern, visited)) {
-            return true;
-        }
-        visited.add(new Attempt(start, i, j));
-        return false;
-    }
-
-    static class Attempt {
-        int start;
-        int i;
-        int j;
-
-        Attempt(int start, int i, int j) {
-            this.start = start;
-            this.i = i;
-            this.j = j;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(start, i, j);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) { return true; }
-            if (o == null || getClass() != o.getClass()) { return false; }
-            final Attempt attempt = (Attempt) o;
-            return start == attempt.start &&
-                   i == attempt.i &&
-                   j == attempt.j;
-        }
+        return dp[i][j][idx] = res;
     }
 
     public static void main(String[] args) {

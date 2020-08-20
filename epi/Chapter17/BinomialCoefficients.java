@@ -7,55 +7,33 @@ public final class BinomialCoefficients {
 
     @EpiTest(testDataFile = "binomial_coefficients.tsv")
     public static int computeBinomialCoefficient(int n, int k) {
-        final int[][] dp = new int[n + 1][k + 1];
-        for (int i = 1; i <= n; i++) {
-            dp[i][0] = 1;
-        }
-        for (int i = 0; i <= k; i++) {
-            dp[i][i] = 1;
-        }
-
-        for (int i = 2; i <= n; i++) {
-            for (int j = 1; j <= k; j++) {
-                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+        if (k == 0) { return 1; }
+        int[] row = new int[k + 1];
+        row[0] = 1;
+        row[1] = 1;
+        for (int i = 0; i < n - 1; i++) {
+            final int[] next = new int[k + 1];
+            for (int j = 0; j <= k; j++) {
+                next[j] = ((j > 0) ? row[j - 1] : 0) + row[j];
             }
+            row = next;
         }
-
-        return dp[n][k];
-    }
-
-    @EpiTest(testDataFile = "binomial_coefficients.tsv")
-    public static int computeBinomialCoefficientSpace(int n, int k) {
-        final int[][] dp = new int[2][k + 2];
-        dp[0][0] = 1;
-        dp[1][0] = 1;
-        dp[1][1] = 1;
-
-        for (int i = 2; i <= n; i++) {
-            for (int j = 1; j <= k; j++) {
-                dp[i % 2][j] = dp[(i - 1) % 2][j - 1] + dp[(i - 1) % 2][j];
-            }
-        }
-
-        return dp[n % 2][k];
+        return row[k];
     }
 
     @EpiTest(testDataFile = "binomial_coefficients.tsv")
     public static int computeBinomialCoefficientR(int n, int k) {
-        return calc(n, k, new int[n + 1][n + 1]);
+        return dfs(n, k, new int[n + 1][k + 1]);
     }
 
-    public static int calc(int n, int k, int[][] cache) {
+    public static int dfs(int n, int k, int[][] dp) {
         if (n == k || k == 0) {
             return 1;
         }
-
-        if (cache[n][k] != 0) {
-            return cache[n][k];
+        if (dp[n][k] != 0) {
+            return dp[n][k];
         }
-
-        cache[n][k] = calc(n - 1, k - 1, cache) + calc(n - 1, k, cache);
-        return cache[n][k];
+        return dp[n][k] = dfs(n - 1, k - 1, dp) + dfs(n - 1, k, dp);
     }
 
     public static void main(String[] args) {
